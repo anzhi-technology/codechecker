@@ -113,6 +113,7 @@ export default {
       //Form
       form: this.$form.createForm(this),
       SingleData: {},
+      projectId:this.$route.params.parameter,
       //treeiInput
       departmentValue: undefined,
       departmentData: []
@@ -144,7 +145,7 @@ export default {
   methods: {
     //获取单个用户信息
     getSingleData() {
-      getSingleUser(this.$route.params.parameter).then(res => {
+     return getSingleUser(this.projectId).then(res => {
         if (res.code === 0) {
           const data = res.data.user;
           const posts = [];
@@ -177,7 +178,7 @@ export default {
       const re = new RegExp(reg);
       if (re.test(value)) {
         let formData = new FormData();
-        formData.append("userId", this.$route.params.parameter);
+        formData.append("userId", this.projectId);
         formData.append("phonenumber", value);
         checkPhonenumberUnique(formData).then(res => {
           if (res === 0) {
@@ -193,7 +194,7 @@ export default {
     //验证email
     checkEmail(rule, value, callback) {
       let formData = new FormData();
-      formData.append("userId", this.$route.params.parameter);
+      formData.append("userId", this.projectId);
       formData.append("email", value);
       checkEmailUnique(formData).then(res => {
         if (res === 0) {
@@ -213,7 +214,7 @@ export default {
           let dept = values.dept.split(",");
           let status = values.status === "checked" ? "0" : "1";
           let formData = new FormData();
-          formData.append("userId", this.$route.params.parameter);
+          formData.append("userId", this.projectId);
           formData.append("userName", values.userName);
           formData.append("phonenumber", values.phonenumber);
           formData.append("loginName", values.loginName);

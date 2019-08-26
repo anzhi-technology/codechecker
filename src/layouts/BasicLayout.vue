@@ -3,7 +3,7 @@
     <a-layout style="min-height: 100vh">
       <a-layout-sider theme="dark" :trigger="null" collapsible breakpoint="lg" v-model="collapsed" width="256px">
         <div class="logo">
-          <img width="32" src="../assets/images/code-logo.png" />
+          <img width="32" src="../assets/images/logo-safe.png" />
           <h1>源码检测审计系统</h1>
         </div>
         <SiderMenu theme="dark" />

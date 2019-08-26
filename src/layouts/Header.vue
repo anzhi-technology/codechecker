@@ -1,9 +1,9 @@
 <template>
   <div class="header-right">
     <div class="header-user-con">
-      <div class="welcomeText">
-        <span style="color:#A9A9A9;font-size: 13px">欢迎来到源码审计系统...</span>
-      </div>
+      <!--<div class="welcomeText">-->
+        <!--<span style="color:#A9A9A9;font-size: 13px">欢迎来到源码审计系统...</span>-->
+      <!--</div>-->
 
       <!-- 用户头像 -->
       <a-dropdown class="user-name">
@@ -75,10 +75,10 @@
     font-size: 16px;
   }
 */
-  .welcomeText {
+  /*.welcomeText {
     margin-right: 20px;
     font-size: 13px;
-  }
+  }*/
 
   .user-name {
     margin-left: 10px;

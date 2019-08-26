@@ -81,7 +81,7 @@ module.exports = {
         }
       },
       '/huntLeak/': {
-        target: "http://139.224.36.25:8080",
+        target: "http://10.0.0.8:8080/huntLeak",
         ws:true,
         changOrigin:true,
         pathRewrite:{

@@ -153,6 +153,7 @@
               item.startTime = timeToDateString(item.startTime);
             });
             this.allData = res.data;
+            this.allData.reverse(); //反序排列
             this.runningData = res.data.filter(item => item.progress === "正在检测"); //筛选出正在检测的任务
             if(this.runningData.length === 0) clearInterval(this.intervalFlag);      //没有检测任务的时候清除定时器
           }

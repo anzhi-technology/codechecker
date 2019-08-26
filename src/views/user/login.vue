@@ -43,20 +43,16 @@ export default {
         if (!err) {
           this.logging = true;
           let formData = new FormData();
-          formData.append("username",values.userName);
-          formData.append("password",values.password);
+          formData.append('username', values.userName);
+          formData.append('password', values.password);
+          formData.append('rememberMe', "true");
           return login(formData).then(res => {
             this.logging = false;
             // 判断是否登录成功
-            if(res.status === 200){
+            if (res.code === 0) {
               this.loading = false;
               this.$router.push('/sourceCode/overview');
-              //window.location.href = "/sourceCode/overview";
-            }else{
-              this.$notification['error']({
-                message: '登录失败',
-                description: res.msg
-              });
+              //window.location.href = "/imonitor/dashboard/home";
             }
           });
         }

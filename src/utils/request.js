@@ -35,6 +35,8 @@ service.interceptors.response.use(
           path: '/login'
         });
         return Promise.reject(response.data.msg);
+      }else if(response.data.status === 500){
+        message.error(response.data.msg);
       } else {
         return response.data;
       }

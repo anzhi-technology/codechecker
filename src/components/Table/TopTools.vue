@@ -2,7 +2,8 @@
   <div class="tableTools">
     <a-row>
       <a-col :span="24">
-        <a-button type="primary" style="height:29px" @click="add">新增</a-button>
+        <!--<a-button type="primary" style="height:29px" @click="add">新增</a-button>-->
+        <slot></slot>
         <div class="right-tool">
           <a-input placeholder="请输入关键字" style="width: 200px" v-model="searchCondition"/>&nbsp;
           <a-button type="primary" style="height:29px" @click="exportData">导出数据</a-button>
@@ -46,9 +47,6 @@
       }
     },
     methods: {
-      add() {
-
-      },
       //导出报告
       exportData() {
         //this.downloadLoading = true;

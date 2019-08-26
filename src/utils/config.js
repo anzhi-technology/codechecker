@@ -4,7 +4,7 @@
 export default {
   /*api url 前缀*/
   adminPrefix:"/admin",
-
+  huntLeakPrefix:"/huntLeak",
   /*分页器的配置*/
   pagination: {
     pageSize: 10,// 默认每页显示数量

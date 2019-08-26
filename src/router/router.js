@@ -14,6 +14,7 @@ const router = new Router({
     {
       path: '/login',
       hideInMenu: true,
+      alias:"/",
       meta: { title: '登录'},
       component: () => import(/* webpackChunkName: "login" */ '@/views/user/login')
     },
@@ -54,11 +55,32 @@ const router = new Router({
               component: () => import(/* webpackChunkName: "sourceCode" */ '@/views/sourceCode/list')
             },
             {
-              path: '/sourceCode/analyzeCode',
+              path: '/sourceCode/analyzeCode/:parameter',
               name: 'analyzeCode',
               hideInMenu: true,
               meta: {title: '缺陷详情'},
               component: () => import(/* webpackChunkName: "sourceCode" */ '@/views/sourceCode/analyzeCode')
+            },
+            {
+              path: '/sourceCode/add',
+              name: 'add',
+              hideInMenu: true,
+              meta: {title: '添加项目'},
+              component: () => import(/* webpackChunkName: "sourceCode" */ '@/views/sourceCode/components/listForm/form')
+            },
+            {
+              path: '/sourceCode/edit/:parameter',
+              name: 'edit',
+              hideInMenu: true,
+              meta: {title: '编辑项目'},
+              component: () => import(/* webpackChunkName: "sourceCode" */ '@/views/sourceCode/components/listForm/form')
+            },
+            {
+              path: '/sourceCode/summary/:parameter',
+              name: 'summary',
+              hideInMenu: true,
+              meta: {title: '项目统计'},
+              component: () => import(/* webpackChunkName: "sourceCode" */ '@/views/sourceCode/summary')
             },
           ]
         }
