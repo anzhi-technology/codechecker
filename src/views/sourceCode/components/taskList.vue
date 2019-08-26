@@ -96,7 +96,7 @@
       columns() {
         const columns = [
           getColumn("序号", "index", (a, b) => a.index - b.index),
-          getColumn("任务名称", "project.name", (a, b) => a.name.localeCompare(b.name)),
+          getColumn("任务名称", "project", (a, b) => a.name.localeCompare(b.name)),
           getColumn("检测状态", "progress", (a, b) => a.progress.localeCompare(b.progress)),
           getColumn("开始时间", "startTime", (a, b) => (a.startTime < b.startTime ? 1 : -1)),
           {
@@ -125,18 +125,20 @@
     mounted() {
       this.$nextTick(() => {
         //判断是否有正在检测的状态，为true时，为定时刷新
-        this.getData().then(()=>{
-          if(this.runningData.length !== 0){
-            this.intervalFlag = setInterval(()=>{ this.getData() },5000);
+        this.getData().then(() => {
+          if (this.runningData.length !== 0) {
+            this.intervalFlag = setInterval(() => {
+              this.getData()
+            }, 5000);
           }
         })
       });
     },
-   /* created() {
-      this.$nextTick(() => {
-        this.getData();
-      });
-    },*/
+    /* created() {
+       this.$nextTick(() => {
+         this.getData();
+       });
+     },*/
     methods: {
       changeDataVisible(visible) {
         this.$emit("changeDataVisible", visible)
@@ -146,17 +148,16 @@
       },
       /*获取任务列表*/
       getData() {
-       return getTasksList().then(res => {
-          if (res.status === 200) {
-            res.data.forEach((item, index) => {
-              item.index = index + 1;
-              item.startTime = timeToDateString(item.startTime);
-            });
-            this.allData = res.data;
-            this.allData.reverse(); //反序排列
-            this.runningData = res.data.filter(item => item.progress === "正在检测"); //筛选出正在检测的任务
-            if(this.runningData.length === 0) clearInterval(this.intervalFlag);      //没有检测任务的时候清除定时器
-          }
+        return getTasksList().then(res => {
+          res.data.forEach((item, index) => {
+            item.index = index + 1;
+            item.startTime = timeToDateString(item.startTime);
+          });
+          this.allData = res.data;
+          this.allData.reverse(); //反序排列
+          this.runningData = res.data.filter(item => item.progress === "正在检测"); //筛选出正在检测的任务
+          if (this.runningData.length === 0) clearInterval(this.intervalFlag);      //没有检测任务的时候清除定时器
+
         });
       },
       /*点击取消*/

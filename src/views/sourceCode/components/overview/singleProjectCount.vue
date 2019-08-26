@@ -80,7 +80,7 @@
     },
     data() {
       return {
-        chart:null,
+        chart: null,
         projectData: [],
         selectValue: '',
         singleProjectData: [],
@@ -92,7 +92,7 @@
         singleLowData: [],
         loading: true,
         visible: false,
-        option:{
+        option: {
           tooltip: {
             trigger: 'axis'
           },
@@ -191,10 +191,8 @@
       getData() {
         this.loading = true;
         return getDefectCount().then(res => {
-          if (res.status === 200) {
-            this.projectData = res.data;
-            this.selectValue = this.projectData[0].hcode;
-          }
+          this.projectData = res.data;
+          this.selectValue = this.projectData[0].hcode;
         });
       },
       //选择框操作
@@ -211,33 +209,32 @@
         this.singleMediumData = [];
         this.singleLowData = [];
         return getSingleProjectCount(hcode).then(res => {
-          if (res.status === 200) {
-            this.loading = false;
-            let data = res.data[0].scanResult;
-            //筛选最新的数据
-            if (!isNull(data)) {
-              let grepData = data.filter(item => !isNull(item.all)); //筛选不为空的数据
-              this.singleProjectData = grepData;
-              grepData.reverse();//反序
-              grepData.forEach(item => {
-                this.timeData.push(timeToDateString(item.end_time));
-                this.singleCriticalData.push(item.dangerous);
-                this.singleHighData.push(item.high);
-                this.singleMediumData.push(item.middle);
-                this.singleLowData.push(item.low);
-              });
-              let ArrayIndex;
-              if (grepData.length !== 0) {
-                this.startValue = timeToDateString(grepData[0].end_time);
-              }
-              if (grepData.length > 5) {
-                ArrayIndex = grepData.length - 5;
-                this.startValue = timeToDateString(grepData[ArrayIndex].end_time);
-              }
-            } else {
-              this.visible = true;
+          this.loading = false;
+          let data = res.data[0].scanResult;
+          //筛选最新的数据
+          if (!isNull(data)) {
+            let grepData = data.filter(item => !isNull(item.all)); //筛选不为空的数据
+            this.singleProjectData = grepData;
+            grepData.reverse();//反序
+            grepData.forEach(item => {
+              this.timeData.push(timeToDateString(item.end_time));
+              this.singleCriticalData.push(item.dangerous);
+              this.singleHighData.push(item.high);
+              this.singleMediumData.push(item.middle);
+              this.singleLowData.push(item.low);
+            });
+            let ArrayIndex;
+            if (grepData.length !== 0) {
+              this.startValue = timeToDateString(grepData[0].end_time);
             }
+            if (grepData.length > 5) {
+              ArrayIndex = grepData.length - 5;
+              this.startValue = timeToDateString(grepData[ArrayIndex].end_time);
+            }
+          } else {
+            this.visible = true;
           }
+
         });
       },
       resize() {

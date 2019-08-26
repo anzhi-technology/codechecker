@@ -224,7 +224,7 @@
       //解析Cron表达式
       analysis(rule, value, callback) {
         analyzeCron(value).then(res => {
-          if (res.status === 200) {
+          if (res.code === 0) {
             let data = res.data;
             let dataDiff;
             //计算时间差
@@ -254,12 +254,13 @@
           if (!err) {
             let projectJson = this.initProjectDataJson(values);
             checkClassPath(projectJson).then(res => {
-              let fileContent = res.data.join("\n");
+              let fileContent = res.data.join(`;\n`);
               this.$info({
                 title: '该路径下的所有文件',
-                content: fileContent,
-                onOk() {
-                },
+                content: h('div',{}, [
+                  h('p', 'some messages...some messages...'),
+                  h('p', 'some messages...some messages...'),
+                ]),
               });
             })
           }

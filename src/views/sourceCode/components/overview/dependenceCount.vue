@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div  v-show="dependenceData.length !== 0" ref="dependenceChart" style="height:200px;"></div>
+    <div v-show="dependenceData.length !== 0" ref="dependenceChart" style="height:200px;"></div>
     <div v-show="loading" style="height:200px;">
       <a-spin class="content"/>
     </div>
@@ -15,58 +15,58 @@
   import {getDependencyCount} from "@/api/sourceCode/overview";
 
   import {isNull} from "@/utils/myUtils"
+
   export default {
     name: "dependenceChart",
-    data(){
+    data() {
       return {
-        chart:null,
-        dependenceData:[],
+        chart: null,
+        dependenceData: [],
         loading: true,
         visible: false
       }
     },
     mounted() {
       getDependencyCount().then(res => {
-        if (res.status === 200) {
-          this.loading = false;
-          let projectDependenceData = res.data.project_dependency;
-          if(!isNull(projectDependenceData)){
-           let grepData = projectDependenceData.filter(item=> !isNull(item.dependencies_num));
-            grepData.forEach(item=>{
-              this.dependenceData.push({"name":item.name,"value":item.vulnerabilities_num});
-            })
-          }else{
-            this.visible = true;
-          }
 
-          this.option = {
-            tooltip: {
-              trigger: 'item',
-              formatter: "{a} <br/>{b}: {c} ({d}%)"
-            },
-            series: [
-              {
-                name:'漏洞总数',
-                type:'pie',
-                roseType : 'radius',
-                label: {
-                  normal: {
-                    show: false,
-                    position: 'center'
-                  }
-                },
-                labelLine: {
-                  normal: {
-                    show: false
-                  }
-                },
-                radius: ['10%', '90%'],
-                data:this.dependenceData
-              }
-            ]
-          };
-          this.renderChart();
+        this.loading = false;
+        let projectDependenceData = res.data.project_dependency;
+        if (!isNull(projectDependenceData)) {
+          let grepData = projectDependenceData.filter(item => !isNull(item.dependencies_num));
+          grepData.forEach(item => {
+            this.dependenceData.push({"name": item.name, "value": item.vulnerabilities_num});
+          })
+        } else {
+          this.visible = true;
         }
+
+        this.option = {
+          tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+          },
+          series: [
+            {
+              name: '漏洞总数',
+              type: 'pie',
+              roseType: 'radius',
+              label: {
+                normal: {
+                  show: false,
+                  position: 'center'
+                }
+              },
+              labelLine: {
+                normal: {
+                  show: false
+                }
+              },
+              radius: ['10%', '90%'],
+              data: this.dependenceData
+            }
+          ]
+        };
+        this.renderChart();
       });
     },
     methods: {
@@ -95,8 +95,8 @@
     position: relative;
     left: 50%;
     top: 50%;
-    -webkit-transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
   }
 </style>

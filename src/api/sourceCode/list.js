@@ -7,17 +7,17 @@ import config from '@/utils/config'
 
 /*获取项目列表*/
 export function getProjectsList(data = {}) {
-  return get(`${config.adminPrefix}/projects`, data);
+  return get(`${config.adminPrefix}/project/list`, data);
 }
 
 /*获取任务列表*/
 export function getTasksList(data = {}) {
-  return get(`${config.adminPrefix}/tasks`, data);
+  return get(`${config.adminPrefix}/project/tasks`, data);
 }
 
 /*获取单个项目信息*/
-export function getSingleProject(sid,data = {}) {
-  return get(`${config.adminPrefix}/project?sid=${sid}`, data);
+export function getSingleProject(hcode,data = {}) {
+  return get(`${config.adminPrefix}/project/${hcode}`, data);
 }
 
 /*解析cron表达式*/

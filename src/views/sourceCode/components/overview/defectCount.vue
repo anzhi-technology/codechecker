@@ -19,7 +19,7 @@
     name: "defectChart",
     data() {
       return {
-        chart:null,
+        chart: null,
         defectData: [],
         nameData: [],
         loading: true,
@@ -28,74 +28,73 @@
     },
     mounted() {
       getDefectCount().then(res => {
-        if (res.status === 200) {
-          this.loading = false;
-          let data = res.data;
-          let lastData = [];
-          let startValue;
-          //筛选最新的数据
-          if (!isNull(data)) {
-            data.forEach(item => {
-              item.scanResult[0].name = item.name;
-              lastData.push(item.scanResult[0])
-            });   //每条项目的最新数据
-            let grepData = lastData.filter(item => !isNull(item.all)); //筛选数据不为空的数据
-            grepData.reverse();                                        //颠倒数组元素
-            grepData.forEach(item => {
-              this.nameData.push(item.name);
-              this.defectData.push(item.all);
-            });
-            let ArrayIndex;
-            startValue = grepData[0].name;
-            if(grepData.length > 5){
-              ArrayIndex = grepData.length -5;
-              startValue = grepData[ArrayIndex].name
-            }
-
-          } else {
-            this.visible = true;
+        this.loading = false;
+        let data = res.data;
+        let lastData = [];
+        let startValue;
+        //筛选最新的数据
+        if (!isNull(data)) {
+          data.forEach(item => {
+            item.scanResult[0].name = item.name;
+            lastData.push(item.scanResult[0])
+          });   //每条项目的最新数据
+          let grepData = lastData.filter(item => !isNull(item.all)); //筛选数据不为空的数据
+          grepData.reverse();                                        //颠倒数组元素
+          grepData.forEach(item => {
+            this.nameData.push(item.name);
+            this.defectData.push(item.all);
+          });
+          let ArrayIndex;
+          startValue = grepData[0].name;
+          if (grepData.length > 5) {
+            ArrayIndex = grepData.length - 5;
+            startValue = grepData[ArrayIndex].name
           }
 
-          this.option = {
-            tooltip: {
-              trigger: 'axis'
-            },
-            grid: {
-              top: '5%',
-              width: '95%',
-              bottom: '25%',
-              left: 10,
-              containLabel: true
-            },
-            xAxis: {
-              type: 'category',
-              data: this.nameData,
-              axisLabel: {
-                show: false
-              },
-              axisTick: {
-                alignWithLabel: true
-              }
-            },
-            yAxis: {
-              type: 'value'
-            },
-            dataZoom: [
-
-              {
-                show: true,
-                startValue: startValue,
-                //endValue:'Walownie'
-              }
-
-            ],
-            series: [{
-              data: this.defectData,
-              type: 'line'
-            }]
-          };
-          this.renderChart();
+        } else {
+          this.visible = true;
         }
+
+        this.option = {
+          tooltip: {
+            trigger: 'axis'
+          },
+          grid: {
+            top: '5%',
+            width: '95%',
+            bottom: '25%',
+            left: 10,
+            containLabel: true
+          },
+          xAxis: {
+            type: 'category',
+            data: this.nameData,
+            axisLabel: {
+              show: false
+            },
+            axisTick: {
+              alignWithLabel: true
+            }
+          },
+          yAxis: {
+            type: 'value'
+          },
+          dataZoom: [
+
+            {
+              show: true,
+              startValue: startValue,
+              //endValue:'Walownie'
+            }
+
+          ],
+          series: [{
+            data: this.defectData,
+            type: 'line'
+          }]
+        };
+        this.renderChart();
+
       });
     },
     methods: {

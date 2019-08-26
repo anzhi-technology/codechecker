@@ -107,7 +107,7 @@
 </template>
 
 <script>
-  import {getProjectsList, editProject, getSingleProject, deleteProject,scanProject} from '@/api/sourceCode/list';
+  import {getProjectsList, editProject, getSingleProject, deleteProject, scanProject} from '@/api/sourceCode/list';
   import TopTools from "@/components/Table/TopTools";
   import taskList from "./components/taskList"
   import {getWidthColumn, filterData, timeToDateString, isNull} from "@/utils/myUtils";
@@ -181,18 +181,16 @@
         //请求检测列表数据
         return getProjectsList().then(res => {
           this.loading = false;
-          if (res.status === 200) {
-            //字段的格式化 如：创建时间createData
-            res.data.forEach(obj => {
-              obj.createDate = timeToDateString(obj.createDate);
-              obj.lastUpdate = timeToDateString(obj.lastUpdate);
-            });
-            //按照创建时间排序
-            res.data.sort((a, b) => (a.createDate < b.createDate ? 1 : -1));
-            this.dataSource = res.data;
-            this.isRefresh = this.dataSource.some(item => item.status === "正在检测");
-            if (!this.isRefresh) clearInterval(this.intervalFlag);
-          }
+          //字段的格式化 如：创建时间createData
+          res.data.forEach(obj => {
+            obj.createDate = timeToDateString(obj.createDate);
+            obj.lastUpdate = timeToDateString(obj.lastUpdate);
+          });
+          //按照创建时间排序
+          res.data.sort((a, b) => (a.createDate < b.createDate ? 1 : -1));
+          this.dataSource = res.data;
+          this.isRefresh = this.dataSource.some(item => item.status === "正在检测");
+          if (!this.isRefresh) clearInterval(this.intervalFlag);
         });
       },
       /*改变data-permission modal的可见*/
@@ -242,8 +240,8 @@
       },
       /*扫描项目*/
       scan(record) {
-        let data = {hcode:record.hcode,dependencyScan:this.isDependenceCheck};
-        scanProject(data).then(res=>{
+        let data = {hcode: record.hcode, dependencyScan: this.isDependenceCheck};
+        scanProject(data).then(res => {
 
         })
       },
