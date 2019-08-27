@@ -51,106 +51,106 @@
 </template>
 
 <script>
-  import {getDictData, removeDictData} from "@/api/system/dict";
-  import TopTools from "@/components/Table/TopTools";
-  import {filterData, getColumn} from "@/utils/myUtils";
-  import initDict from "@/mixins/initDict";
-  import dictDataForm from "./dictData-form"
+import {getDictData, removeDictData} from "@/api/system/dict";
+import TopTools from "@/components/Table/TopTools";
+import {filterData, getColumn} from "@/utils/myUtils";
+import initDict from "@/mixins/initDict";
+import dictDataForm from "./dictData-form"
 
-  export default {
-    name: "dictDataManagement",
-    mixins: [initDict],
-    components: {
-      TopTools,
-      dictDataForm
+export default {
+  name: "dictDataManagement",
+  mixins: [initDict],
+  components: {
+    TopTools,
+    dictDataForm
+  },
+  data() {
+    return {
+      isAdd: true,
+      visible: false,
+      loading: false,
+      updateRecord: null,
+      defaultDictType: this.$route.params.parameter,
+      dataSource: [],
+      tHeader: ["字典编码", "字典标签", "字典键值", "字典排序", "状态", "备注", "创建时间",],
+      filterVal: ["dictCode", "dictLabel", "dictValue", "dictSort", "status", "remark", "createTime"],
+      downLoadTitle: '字典数据列表',
+      pagination: {pageSize: 10},
+      searchCondition: "",
+    };
+  },
+  beforeCreate() {
+    this.form = this.$form.createForm(this);
+  },
+  computed: {
+    columns() {
+      const columns = [
+        getColumn("字典编码", "dictCode", (a, b) => a.dictCode - b.dictCode),
+        getColumn("字典标签", "dictLabel", (a, b) => a.dictLabel.localeCompare(b.dictLabel)),
+        getColumn("字典键值", "dictValue", (a, b) => a.dictValue.localeCompare(b.dictValue)),
+        getColumn("字典排序", "dictSort", (a, b) => a.dictSort - b.dictSort),
+        getColumn("状态", "status", (a, b) => a.status - b.status),
+        getColumn("备注", "remark"),
+        getColumn("创建时间", "createTime", (a, b) => a.createTime < b.createTime ? 1 : -1),
+        {title: "操作", key: "action", scopedSlots: {customRender: "action"}}
+      ];
+      return columns;
     },
-    data() {
-      return {
-        isAdd: true,
-        visible: false,
-        loading: false,
-        updateRecord: null,
-        defaultDictType: this.$route.params.parameter,
-        dataSource: [],
-        tHeader: ["字典编码", "字典标签", "字典键值", "字典排序", "状态", "备注", "创建时间",],
-        filterVal: ["dictCode", "dictLabel", "dictValue", "dictSort", "status", "remark", "createTime"],
-        downLoadTitle: '字典数据列表',
-        pagination: {pageSize: 10},
-        searchCondition: "",
-      };
+    TableData() {
+      return filterData(this.searchCondition, this.dataSource);
+    }
+  },
+  created() {
+    this.$nextTick(() => {
+      this.getDict();
+      this.getData();
+    });
+  },
+  methods: {
+    //子组件传过来的值
+    getSearchVal(msg) {
+      this.searchCondition = msg;
     },
-    beforeCreate() {
-      this.form = this.$form.createForm(this);
-    },
-    computed: {
-      columns() {
-        const columns = [
-          getColumn("字典编码", "dictCode", (a, b) => a.dictCode - b.dictCode),
-          getColumn("字典标签", "dictLabel", (a, b) => a.dictLabel.localeCompare(b.dictLabel)),
-          getColumn("字典键值", "dictValue", (a, b) => a.dictValue.localeCompare(b.dictValue)),
-          getColumn("字典排序", "dictSort", (a, b) => a.dictSort - b.dictSort),
-          getColumn("状态", "status", (a, b) => a.status - b.status),
-          getColumn("备注", "remark"),
-          getColumn("创建时间", "createTime", (a, b) => a.createTime < b.createTime ? 1 : -1),
-          {title: "操作", key: "action", scopedSlots: {customRender: "action"}}
-        ];
-        return columns;
-      },
-      TableData() {
-        return filterData(this.searchCondition, this.dataSource);
-      }
-    },
-    created() {
-      this.$nextTick(() => {
-        this.getDict();
-        this.getData();
+    //获取数据
+    getData() {
+      this.loading = true;
+      let formData = new FormData();
+      formData.append("dictType", this.$route.params.parameter);
+      getDictData(formData).then(res => {
+        if (res.code === 0) {
+          this.loading = false;
+          this.dataSource = res.rows;
+        }
       });
     },
-    methods: {
-      //子组件传过来的值
-      getSearchVal(msg) {
-        this.searchCondition = msg;
-      },
-      //获取数据
-      getData() {
-        this.loading = true;
-        let formData = new FormData();
-        formData.append("dictType", this.$route.params.parameter);
-        getDictData(formData).then(res => {
-          if (res.code === 0) {
-            this.loading = false;
-            this.dataSource = res.rows;
-          }
-        });
-      },
-      changeVisible(visible) {
-        this.visible = visible
-      },
-      updateDictData(record) {
-        if (record) {
-          this.isAdd = false;
-          this.updateRecord = record;
+    changeVisible(visible) {
+      this.visible = visible
+    },
+    updateDictData(record) {
+      if (record) {
+        this.isAdd = false;
+        this.updateRecord = record;
+      } else {
+        this.isAdd = true;
+        this.updateRecord = null;
+      }
+      this.changeVisible(true);
+    },
+    //删除用户
+    deleteDictData(dictCode) {
+      let formData = new FormData();
+      formData.append("ids", dictCode);
+      removeDictData(formData).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg);
+          this.getData();
         } else {
-          this.isAdd = true;
-          this.updateRecord = null;
+          this.$message.error(res.msg);
         }
-        this.changeVisible(true);
-      },
-      //删除用户
-      deleteDictData(dictCode) {
-        let formData = new FormData();
-        formData.append("ids", dictCode);
-        removeDictData(formData).then(res => {
-          if (res.code === 0) {
-            this.$message.success(res.msg);
-            this.getData();
-          } else {
-            this.$message.error(res.msg);
-          }
-        });
-      },
-    }
-  };
+      });
+    },
+  }
+};
 </script>
 
 <style lang="less" type="text/less" scoped>

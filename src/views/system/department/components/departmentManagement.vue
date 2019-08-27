@@ -52,104 +52,104 @@
 </template>
 
 <script>
-  import {getDepartmentList, getDepartmentTreeData, removeDepartment} from "@/api/system/dept";
-  import initDict from "@/mixins/initDict";
-  import {getColumn, transData, recursionMenu} from "@/utils/myUtils";
-  import deptForm from "./form/form";
+import {getDepartmentList, getDepartmentTreeData, removeDepartment} from "@/api/system/dept";
+import initDict from "@/mixins/initDict";
+import {getColumn, transData, recursionMenu} from "@/utils/myUtils";
+import deptForm from "./form/form";
 
-  export default {
-    name: "departmentManagement",
-    mixins: [initDict],
-    components: {
-      deptForm
+export default {
+  name: "departmentManagement",
+  mixins: [initDict],
+  components: {
+    deptForm
+  },
+  data() {
+    return {
+      isAdd: true,
+      visible: false,
+      updateRecord: null,
+      deptTreeData: [],
+      loading: false,
+      //columns:[],
+      dataSource: [],
+    };
+  },
+  computed: {
+    columns() {
+      const columns = [
+        getColumn("部门名称", "deptName"),
+        getColumn("排序", "orderNum"),
+        getColumn("状态", "status"),
+        getColumn("创建时间", "createTime"),
+        {title: "操作", key: "action", scopedSlots: {customRender: "action"}}
+      ];
+      return columns;
     },
-    data() {
-      return {
-        isAdd: true,
-        visible: false,
-        updateRecord: null,
-        deptTreeData: [],
-        loading: false,
-        //columns:[],
-        dataSource: [],
-      };
-    },
-    computed: {
-      columns() {
-        const columns = [
-          getColumn("部门名称", "deptName"),
-          getColumn("排序", "orderNum"),
-          getColumn("状态", "status"),
-          getColumn("创建时间", "createTime"),
-          {title: "操作", key: "action", scopedSlots: {customRender: "action"}}
-        ];
-        return columns;
-      },
-    },
-    beforeCreate() {
-      this.form = this.$form.createForm(this);
-    },
-    created() {
-      this.$nextTick(() => {
-        this.getDict();
-        this.getData();
+  },
+  beforeCreate() {
+    this.form = this.$form.createForm(this);
+  },
+  created() {
+    this.$nextTick(() => {
+      this.getDict();
+      this.getData();
+    });
+  },
+  methods: {
+    //获取数据
+    getData() {
+      this.loading = true;
+      getDepartmentList().then(res => {
+        this.loading = false;
+        this.dataSource = transData(res, "deptId", "parentId");
       });
     },
-    methods: {
-      //获取数据
-      getData() {
-        this.loading = true;
-        getDepartmentList().then(res => {
-          this.loading = false;
-          this.dataSource = transData(res, "deptId", "parentId");
-        });
-      },
-      //删除部门
-      deleteDepartment(deptId) {
-        removeDepartment(deptId).then(res => {
-          if (res.code === 0) {
-            this.$message.success(res.msg);
-            this.getData();
-          } else {
-            this.$message.error(res.msg);
-          }
-        });
-      },
-      /*改变添加或修改modal的可见*/
-      changeVisible(visible) {
-        this.visible = visible
-      },
-      /*打开添加和修改的form表单*/
-      updateDept(record) {
-        if (record) {
-          this.isAdd = false;
-          this.updateRecord = record;
-
+    //删除部门
+    deleteDepartment(deptId) {
+      removeDepartment(deptId).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg);
+          this.getData();
         } else {
-          this.isAdd = true;
-          this.updateRecord = null;
+          this.$message.error(res.msg);
         }
-        //获取部门treeSelect
-        getDepartmentTreeData().then(res => {
-          if (res.code === 0) {
-            this.deptTreeData = recursionMenu(res.data);
-          }
-        });
-        this.changeVisible(true);
-      },
-      addSubDept(record) {
-        this.isAdd = true;
+      });
+    },
+    /*改变添加或修改modal的可见*/
+    changeVisible(visible) {
+      this.visible = visible
+    },
+    /*打开添加和修改的form表单*/
+    updateDept(record) {
+      if (record) {
+        this.isAdd = false;
         this.updateRecord = record;
-        //获取部门treeSelect
-        getDepartmentTreeData().then(res => {
-          if (res.code === 0) {
-            this.deptTreeData = recursionMenu(res.data);
-          }
-        });
-        this.changeVisible(true);
+
+      } else {
+        this.isAdd = true;
+        this.updateRecord = null;
       }
+      //获取部门treeSelect
+      getDepartmentTreeData().then(res => {
+        if (res.code === 0) {
+          this.deptTreeData = recursionMenu(res.data);
+        }
+      });
+      this.changeVisible(true);
+    },
+    addSubDept(record) {
+      this.isAdd = true;
+      this.updateRecord = record;
+      //获取部门treeSelect
+      getDepartmentTreeData().then(res => {
+        if (res.code === 0) {
+          this.deptTreeData = recursionMenu(res.data);
+        }
+      });
+      this.changeVisible(true);
     }
-  };
+  }
+};
 </script>
 
 <style lang="less" type="text/less" scoped>

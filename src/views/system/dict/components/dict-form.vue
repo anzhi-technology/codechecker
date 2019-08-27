@@ -48,105 +48,105 @@
   </div>
 </template>
 <script>
-  import {addDict,editDict,checkDictTypeUnique} from "@/api/system/dict";
+import {addDict,editDict,checkDictTypeUnique} from "@/api/system/dict";
 
-  export default {
-    props: {
-      isAdd: {
-        type: Boolean,
-        required: true
-      },
-      visible: {
-        type: Boolean,
-        required: true
-      },
-      statusDicts: {
-        type: Array,
-        required: true
-      },
-      updateRecord: {
-        type: Object,
-        required: false
-      }
+export default {
+  props: {
+    isAdd: {
+      type: Boolean,
+      required: true
     },
-    data() {
-      return {
-        confirmLoading: false,
-        form: this.$form.createForm(this),
-      }
+    visible: {
+      type: Boolean,
+      required: true
     },
-    computed: {
-      title(){
-        if (this.isAdd) {
-          return "添加字典"
-        }else {
-          return "编辑字典"
-        }
-      }
+    statusDicts: {
+      type: Array,
+      required: true
     },
-    methods: {
-      changeVisible(visible) {
-        this.$emit("changeVisible",visible)
-      },
-      refreshTable(){
-        this.$emit("refreshTable")
-      },
-      /*验证字典类型*/
-      checkDictType(rule, value, callback) {
-        let formData = new FormData();
-        formData.append("dictType", value);
-        if (this.updateRecord) formData.append("dictId", this.updateRecord.dictId);
-        checkDictTypeUnique(formData).then(res => {
-          if (res === 0) {
-            callback();
-          } else {
-            return callback(new Error('该字典类型已经存在'));
-          }
-        });
-      },
-      /*点击确定*/
-      handleOk() {
-        this.confirmLoading = true;
-        this.form.validateFields((err, values) => {
-          if (!err){
-            let formData = new FormData();
-            formData.append("dictName",values.dictName);
-            formData.append("dictType",values.dictType);
-            formData.append("status",values.status);
-            formData.append("remark",values.remark);
-            if (this.updateRecord) {
-              formData.append("dictId",this.updateRecord.dictId);
-              editDict(formData).then(value => {
-                if (value.code === 0){
-                  this.$message.success(value.msg);
-                  this.refreshTable();
-                }else {
-                  this.$message.error(value.msg);
-                }
-              })
-            }else {
-              addDict(formData).then(value => {
-                if (value.code === 0){
-                  this.$message.success(value.msg);
-                  this.refreshTable();
-                }else {
-                  this.$message.error(value.msg);
-                }
-              })
-            }
-          }
-        });
-        this.confirmLoading = false;
-        this.changeVisible(false);
-        setTimeout(() => {
-          this.form.resetFields()
-        }, 500);
-      },
-      /*点击取消*/
-      handleCancel() {
-        this.changeVisible(false);
-        this.form.resetFields()
-      },
+    updateRecord: {
+      type: Object,
+      required: false
     }
+  },
+  data() {
+    return {
+      confirmLoading: false,
+      form: this.$form.createForm(this),
+    }
+  },
+  computed: {
+    title(){
+      if (this.isAdd) {
+        return "添加字典"
+      }else {
+        return "编辑字典"
+      }
+    }
+  },
+  methods: {
+    changeVisible(visible) {
+      this.$emit("changeVisible",visible)
+    },
+    refreshTable(){
+      this.$emit("refreshTable")
+    },
+    /*验证字典类型*/
+    checkDictType(rule, value, callback) {
+      let formData = new FormData();
+      formData.append("dictType", value);
+      if (this.updateRecord) formData.append("dictId", this.updateRecord.dictId);
+      checkDictTypeUnique(formData).then(res => {
+        if (res === 0) {
+          callback();
+        } else {
+          return callback(new Error('该字典类型已经存在'));
+        }
+      });
+    },
+    /*点击确定*/
+    handleOk() {
+      this.confirmLoading = true;
+      this.form.validateFields((err, values) => {
+        if (!err){
+          let formData = new FormData();
+          formData.append("dictName",values.dictName);
+          formData.append("dictType",values.dictType);
+          formData.append("status",values.status);
+          formData.append("remark",values.remark);
+          if (this.updateRecord) {
+            formData.append("dictId",this.updateRecord.dictId);
+            editDict(formData).then(value => {
+              if (value.code === 0){
+                this.$message.success(value.msg);
+                this.refreshTable();
+              }else {
+                this.$message.error(value.msg);
+              }
+            })
+          }else {
+            addDict(formData).then(value => {
+              if (value.code === 0){
+                this.$message.success(value.msg);
+                this.refreshTable();
+              }else {
+                this.$message.error(value.msg);
+              }
+            })
+          }
+        }
+      });
+      this.confirmLoading = false;
+      this.changeVisible(false);
+      setTimeout(() => {
+        this.form.resetFields()
+      }, 500);
+    },
+    /*点击取消*/
+    handleCancel() {
+      this.changeVisible(false);
+      this.form.resetFields()
+    },
   }
+}
 </script>

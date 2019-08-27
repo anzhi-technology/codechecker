@@ -51,76 +51,76 @@
   </div>
 </template>
 <script>
-  import {authDataScope} from "@/api/system/role";
+import {authDataScope} from "@/api/system/role";
 
-  export default {
-    props: {
-      dataPermissionVisible: {
-        type: Boolean,
-        required: true
-      },
-      dataRecord: {
-        type: Object,
-        required: false
-      },
-      departmentTree: {
-        type: Array,
-        required: true
-      },
+export default {
+  props: {
+    dataPermissionVisible: {
+      type: Boolean,
+      required: true
     },
-    data() {
-      return {
-        //ModalText: 'Content of the modal',
-        confirmLoading: false,
-        form: this.$form.createForm(this),
-      }
+    dataRecord: {
+      type: Object,
+      required: false
     },
-    methods: {
-      changeDataVisible(visible) {
-        this.$emit("changeDataVisible", visible)
-      },
-      refreshTable() {
-        this.$emit("refreshTable")
-      },
-      onCheck (checkedKeys) {
-        // console.log('onCheck', checkedKeys, info)
-        this.deptIds = checkedKeys;
+    departmentTree: {
+      type: Array,
+      required: true
+    },
+  },
+  data() {
+    return {
+      //ModalText: 'Content of the modal',
+      confirmLoading: false,
+      form: this.$form.createForm(this),
+    }
+  },
+  methods: {
+    changeDataVisible(visible) {
+      this.$emit("changeDataVisible", visible)
+    },
+    refreshTable() {
+      this.$emit("refreshTable")
+    },
+    onCheck(checkedKeys) {
+      // console.log('onCheck', checkedKeys, info)
+      this.deptIds = checkedKeys;
 
-      },
-      /*点击确定*/
-      handleOk() {
-        this.confirmLoading = true;
-        this.form.validateFields((err, values) => {
-          if (!err) {
-            let formData = new FormData();
-            formData.append("roleId",this.dataRecord.roleId);
-            formData.append("roleName",values.roleName);
-            formData.append("roleKey",values.roleKey);
-            formData.append("dataScope",values.dataScope);
-            formData.append("deptIds",this.deptIds);
-            authDataScope(formData).then(res =>{
-                if(res.code === 0){
-                  this.$message.success(res.msg);
-                }else{
-                  this.$message.error(res.msg);
-                }
-            })
-          }
-        });
-        this.confirmLoading = false;
-        this.changeDataVisible(false);
-        setTimeout(() => {
-          this.form.resetFields()
-        }, 500);
-      },
-      /*点击取消*/
-      handleCancel() {
-        this.changeDataVisible(false);
-        this.form.resetFields();
-      },
-      handleChange(value){
-        this.dataRecord.dataScope = value === "1"?"1":"2";
-      }
+    },
+    /*点击确定*/
+    handleOk() {
+      this.confirmLoading = true;
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          let formData = new FormData();
+          formData.append("roleId",this.dataRecord.roleId);
+          formData.append("roleName",values.roleName);
+          formData.append("roleKey",values.roleKey);
+          formData.append("dataScope",values.dataScope);
+          formData.append("deptIds",this.deptIds);
+          authDataScope(formData).then(res =>{
+            if(res.code === 0){
+              this.$message.success(res.msg);
+            }else{
+              this.$message.error(res.msg);
+            }
+          })
+        }
+      });
+      this.confirmLoading = false;
+      this.changeDataVisible(false);
+      setTimeout(() => {
+        this.form.resetFields()
+      }, 500);
+    },
+    /*点击取消*/
+    handleCancel() {
+      this.changeDataVisible(false);
+      this.form.resetFields();
+    },
+    handleChange(value){
+      this.dataRecord.dataScope = value === "1"?"1":"2";
     }
   }
+}
 </script>

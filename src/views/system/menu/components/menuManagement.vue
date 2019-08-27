@@ -61,109 +61,109 @@
 </template>
 
 <script>
-  import {getAllMenu,getMenuTree,removeMenu} from "@/api/system/menu";
-  import initDict from "@/mixins/initDict";
-  import {getColumn,filterData, transData,recursionMenu} from "@/utils/myUtils";
-  import menuForm from "./form/menu-form";
+import {getAllMenu,getMenuTree,removeMenu} from "@/api/system/menu";
+import initDict from "@/mixins/initDict";
+import {getColumn,filterData, transData,recursionMenu} from "@/utils/myUtils";
+import menuForm from "./form/menu-form";
 
-  export default {
-    name: "menuManagement",
-    mixins: [initDict],
-    components: {
-      menuForm
+export default {
+  name: "menuManagement",
+  mixins: [initDict],
+  components: {
+    menuForm
+  },
+  data() {
+    return {
+      isAdd: true,
+      visible: false,
+      updateRecord: null,
+      menuTreeData: [],
+      loading: false,
+      //columns:[],
+      dataSource: [],
+    };
+  },
+  beforeCreate() {
+    this.form = this.$form.createForm(this);
+  },
+  computed: {
+    columns() {
+      const columns = [
+        getColumn("菜单名称", "menuName"),
+        getColumn("排序", "orderNum"),
+        getColumn("请求地址", "url"),
+        getColumn("类型", "menuType"),
+        getColumn("可见", "visible"),
+        getColumn("权限标识", "perms"),
+        {
+          title: "操作",
+          key: "action",
+          scopedSlots: {customRender: "action"}
+        }
+      ];
+      return columns;
     },
-    data() {
-      return {
-        isAdd: true,
-        visible: false,
-        updateRecord: null,
-        menuTreeData: [],
-        loading: false,
-        //columns:[],
-        dataSource: [],
-      };
-    },
-    beforeCreate() {
-      this.form = this.$form.createForm(this);
-    },
-    computed: {
-      columns() {
-        const columns = [
-          getColumn("菜单名称", "menuName"),
-          getColumn("排序", "orderNum"),
-          getColumn("请求地址", "url"),
-          getColumn("类型", "menuType"),
-          getColumn("可见", "visible"),
-          getColumn("权限标识", "perms"),
-          {
-            title: "操作",
-            key: "action",
-            scopedSlots: {customRender: "action"}
-          }
-        ];
-        return columns;
-      },
-    },
-    created() {
-      this.$nextTick(() => {
-        this.getData();
-        this.getDict();
+  },
+  created() {
+    this.$nextTick(() => {
+      this.getData();
+      this.getDict();
+    });
+  },
+  methods: {
+
+    //获取数据
+    getData() {
+      this.loading = true;
+      getAllMenu().then(res => {
+        this.loading = false;
+        this.dataSource = transData(res, "menuId", "parentId");
       });
     },
-    methods: {
-
-      //获取数据
-      getData() {
-        this.loading = true;
-        getAllMenu().then(res => {
-          this.loading = false;
-          this.dataSource = transData(res, "menuId", "parentId");
-        });
-      },
-      //删除菜单
-      deleteMenu(menuId) {
-        removeMenu(menuId).then(res => {
-          if (res.code === 0) {
-            this.$message.success(res.msg);
-            this.getData();
-          } else {
-            this.$message.error(res.msg);
-          }
-        });
-      },
-      /*改变添加或修改modal的可见*/
-      changeVisible(visible) {
-        this.visible = visible
-      },
-      /*打开添加和修改的form表单*/
-      updateMenu(record) {
-        console.log(record);
-        if (record) {
-          this.isAdd = false;
-          this.updateRecord = record;
+    //删除菜单
+    deleteMenu(menuId) {
+      removeMenu(menuId).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg);
+          this.getData();
         } else {
-          this.isAdd = true;
-          this.updateRecord = null;
+          this.$message.error(res.msg);
         }
-        //获取菜单树
-        getMenuTree().then(res => {
-          let data = transData(res, "id", "pId");
-          this.menuTreeData = recursionMenu(data);
-        });
-        this.changeVisible(true);
-      },
-      addSubMenu(record){
-        this.isAdd = true;
+      });
+    },
+    /*改变添加或修改modal的可见*/
+    changeVisible(visible) {
+      this.visible = visible
+    },
+    /*打开添加和修改的form表单*/
+    updateMenu(record) {
+      console.log(record);
+      if (record) {
+        this.isAdd = false;
         this.updateRecord = record;
-        //获取菜单树
-        getMenuTree().then(res => {
-          let data = transData(res, "id", "pId");
-          this.menuTreeData = recursionMenu(data);
-        });
-        this.changeVisible(true);
+      } else {
+        this.isAdd = true;
+        this.updateRecord = null;
       }
+      //获取菜单树
+      getMenuTree().then(res => {
+        let data = transData(res, "id", "pId");
+        this.menuTreeData = recursionMenu(data);
+      });
+      this.changeVisible(true);
+    },
+    addSubMenu(record){
+      this.isAdd = true;
+      this.updateRecord = record;
+      //获取菜单树
+      getMenuTree().then(res => {
+        let data = transData(res, "id", "pId");
+        this.menuTreeData = recursionMenu(data);
+      });
+      this.changeVisible(true);
     }
-  };
+  }
+};
 </script>
 
 <style lang="less" type="text/less" scoped>

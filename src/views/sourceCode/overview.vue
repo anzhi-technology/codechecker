@@ -47,24 +47,24 @@
 </template>
 
 <script>
-  import defectCount from "@/views/sourceCode/components/overview/defectCount"
-  import highRiskVulnerabilityCount from "@/views/sourceCode/components/overview/highRiskVulnerabilityCount"
-  import vulnerabilityCount from "@/views/sourceCode/components/overview/vulnerabilityCount"
-  import checkNumberCount from "@/views/sourceCode/components/overview/checkNumberCount"
-  import dependenceCount from "@/views/sourceCode/components/overview/dependenceCount"
-  import singleProjectCount from "@/views/sourceCode/components/overview/singleProjectCount"
+import defectCount from "@/views/sourceCode/components/overview/defectCount"
+import highRiskVulnerabilityCount from "@/views/sourceCode/components/overview/highRiskVulnerabilityCount"
+import vulnerabilityCount from "@/views/sourceCode/components/overview/vulnerabilityCount"
+import checkNumberCount from "@/views/sourceCode/components/overview/checkNumberCount"
+import dependenceCount from "@/views/sourceCode/components/overview/dependenceCount"
+import singleProjectCount from "@/views/sourceCode/components/overview/singleProjectCount"
 
-  export default {
-    name: "overview",
-    components: {
-      defectCount,
-      highRiskVulnerabilityCount,
-      vulnerabilityCount,
-      checkNumberCount,
-      dependenceCount,
-      singleProjectCount
-    }
+export default {
+  name: "overview",
+  components: {
+    defectCount,
+    highRiskVulnerabilityCount,
+    vulnerabilityCount,
+    checkNumberCount,
+    dependenceCount,
+    singleProjectCount
   }
+}
 </script>
 
 <style scoped>

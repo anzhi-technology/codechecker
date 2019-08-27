@@ -18,7 +18,7 @@
             <a-form-item label="公告标题" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
               <a-input placeholder="请输入公告标题"
                        v-decorator="['noticeTitle', {initialValue: updateRecord?updateRecord.noticeTitle:'',
-                                                    rules: [{ required: true, message: '公告标题不能为空！' }]}]"/>
+                                                     rules: [{ required: true, message: '公告标题不能为空！' }]}]"/>
             </a-form-item>
 
             <a-form-item label="公告类型" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
@@ -32,7 +32,7 @@
               <div class="quill-editor-example">
                 <!-- quill-editor -->
                 <quill-editor  ref="myTextEditor"
-                              v-model="content"
+                               v-model="content"
                                :options="editorOption"
                 >
                 </quill-editor>
@@ -55,115 +55,115 @@
   </div>
 </template>
 <script>
-  import {addNotice, editNotice} from "@/api/system/notice";
-  // require styles
-  import 'quill/dist/quill.core.css'
-  import 'quill/dist/quill.snow.css'
-  import 'quill/dist/quill.bubble.css'
-  import {quillEditor} from 'vue-quill-editor'
+import {addNotice, editNotice} from "@/api/system/notice";
+// require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import {quillEditor} from 'vue-quill-editor'
 
-  export default {
-    components: {
-      quillEditor
+export default {
+  components: {
+    quillEditor
+  },
+  props: {
+    isAdd: {
+      type: Boolean,
+      required: true
     },
-    props: {
-      isAdd: {
-        type: Boolean,
-        required: true
-      },
-      visible: {
-        type: Boolean,
-        required: true
-      },
-      noticeStatusDict: {
-        type: Array,
-        required: true
-      },
-      noticeDict: {
-        type: Array,
-        required: true
-      },
-      updateRecord: {
-        type: Object,
-        required: false
-      }
+    visible: {
+      type: Boolean,
+      required: true
     },
-    data() {
-      return {
-        confirmLoading: false,
-        form: this.$form.createForm(this),
-        content: '',
-        editorOption: {
-          placeholder: "请输入公告内容！",
-        }
-      }
+    noticeStatusDict: {
+      type: Array,
+      required: true
     },
-    computed: {
-      title() {
-        if (this.isAdd) {
-          return "添加公告"
-        } else {
-          return "编辑公告"
-        }
-      },
-      editor() {
-        return this.$refs.myTextEditor.quill
-      },
+    noticeDict: {
+      type: Array,
+      required: true
     },
-    methods: {
-      changeVisible(visible) {
-        this.$emit("changeVisible", visible)
-      },
-      refreshTable() {
-        this.$emit("refreshTable")
-      },
-      /*点击确定*/
-      handleOk() {
-        this.confirmLoading = true;
-        this.form.validateFields((err, values) => {
-          if (!err) {
-            let formData = new FormData();
-            formData.append("noticeTitle", values.noticeTitle);
-            formData.append("noticeType", values.noticeType);
-            //formData.append("noticeContent",values.noticeContent);
-            formData.append("noticeContent", 'test');
-            formData.append("status", values.status);
-
-            if (this.updateRecord) {
-              formData.append("noticeId", this.updateRecord.noticeId);
-              editNotice(formData).then(value => {
-                if (value.code === 0) {
-                  this.$message.success(value.msg);
-                  this.refreshTable();
-                } else {
-                  this.$message.error(value.msg);
-                }
-              })
-            } else {
-              addNotice(formData).then(value => {
-                if (value.code === 0) {
-                  this.$message.success(value.msg);
-                  this.refreshTable();
-                } else {
-                  this.$message.error(value.msg);
-                }
-              })
-            }
-          }
-        });
-        this.confirmLoading = false;
-        this.changeVisible(false);
-        setTimeout(() => {
-          this.form.resetFields()
-        }, 500);
-      },
-      /*点击取消*/
-      handleCancel() {
-        this.changeVisible(false);
-        this.form.resetFields()
-      },
+    updateRecord: {
+      type: Object,
+      required: false
     }
+  },
+  data() {
+    return {
+      confirmLoading: false,
+      form: this.$form.createForm(this),
+      content: '',
+      editorOption: {
+        placeholder: "请输入公告内容！",
+      }
+    }
+  },
+  computed: {
+    title() {
+      if (this.isAdd) {
+        return "添加公告"
+      } else {
+        return "编辑公告"
+      }
+    },
+    editor() {
+      return this.$refs.myTextEditor.quill
+    },
+  },
+  methods: {
+    changeVisible(visible) {
+      this.$emit("changeVisible", visible)
+    },
+    refreshTable() {
+      this.$emit("refreshTable")
+    },
+    /*点击确定*/
+    handleOk() {
+      this.confirmLoading = true;
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          let formData = new FormData();
+          formData.append("noticeTitle", values.noticeTitle);
+          formData.append("noticeType", values.noticeType);
+          //formData.append("noticeContent",values.noticeContent);
+          formData.append("noticeContent", 'test');
+          formData.append("status", values.status);
+
+          if (this.updateRecord) {
+            formData.append("noticeId", this.updateRecord.noticeId);
+            editNotice(formData).then(value => {
+              if (value.code === 0) {
+                this.$message.success(value.msg);
+                this.refreshTable();
+              } else {
+                this.$message.error(value.msg);
+              }
+            })
+          } else {
+            addNotice(formData).then(value => {
+              if (value.code === 0) {
+                this.$message.success(value.msg);
+                this.refreshTable();
+              } else {
+                this.$message.error(value.msg);
+              }
+            })
+          }
+        }
+      });
+      this.confirmLoading = false;
+      this.changeVisible(false);
+      setTimeout(() => {
+        this.form.resetFields()
+      }, 500);
+    },
+    /*点击取消*/
+    handleCancel() {
+      this.changeVisible(false);
+      this.form.resetFields()
+    },
   }
+}
 </script>
 
 <style  scoped>

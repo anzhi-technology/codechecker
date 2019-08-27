@@ -18,15 +18,15 @@
             <a-form-item label="字典标签" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
               <a-input placeholder="请输入字典标签"
                        v-decorator="['dictLabel', {initialValue: updateRecord?updateRecord.dictLabel:'',
-                                                  rules: [{ required: true, message: '字典标签不能为空！' }],
-                                                  validateTrigger: 'blur'}]"/>
+                                                   rules: [{ required: true, message: '字典标签不能为空！' }],
+                                                   validateTrigger: 'blur'}]"/>
             </a-form-item>
 
             <a-form-item label="字典键值" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
               <a-input placeholder="请输入字典键值"
                        v-decorator="['dictValue',{initialValue: updateRecord?updateRecord.dictValue:'',
-                                                 rules: [{ required: true, message: '字典键值不能为空！' }],
-                                                 validateTrigger: 'blur'}]"/>
+                                                  rules: [{ required: true, message: '字典键值不能为空！' }],
+                                                  validateTrigger: 'blur'}]"/>
             </a-form-item>
 
             <a-form-item label="字典类型" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
@@ -67,106 +67,106 @@
   </div>
 </template>
 <script>
-  import {addDictData, editDictData} from "@/api/system/dict";
+import {addDictData, editDictData} from "@/api/system/dict";
 
-  export default {
-    props: {
-      isAdd: {
-        type: Boolean,
-        required: true
-      },
-      visible: {
-        type: Boolean,
-        required: true
-      },
-      configStatusDicts: {
-        type: Array,
-        required: true
-      },
-      statusDicts: {
-        type: Array,
-        required: true
-      },
-      updateRecord: {
-        type: Object,
-        required: false
-      },
-      defaultDictType: {
-        type: String,
-        required: false
-      }
+export default {
+  props: {
+    isAdd: {
+      type: Boolean,
+      required: true
     },
-    data() {
-      return {
-        confirmLoading: false,
-        form: this.$form.createForm(this),
-      }
+    visible: {
+      type: Boolean,
+      required: true
     },
-    computed: {
-      title() {
-        if (this.isAdd) {
-          return "添加数据"
-        } else {
-          return "编辑数据"
-        }
-      }
+    configStatusDicts: {
+      type: Array,
+      required: true
     },
-    methods: {
-      changeVisible(visible) {
-        this.$emit("changeVisible", visible)
-      },
-      refreshTable() {
-        this.$emit("refreshTable")
-      },
-      /*点击确定*/
-      handleOk() {
-        this.confirmLoading = true;
-        this.form.validateFields((err, values) => {
-          if (!err) {
-            let formData = new FormData();
-            formData.append("dictLabel", values.dictLabel);
-            formData.append("dictValue", values.dictValue);
-            formData.append("dictType", values.dictType);
-            formData.append("cssClass", '');
-            formData.append("dictSort", values.dictSort);
-            formData.append("listClass", '');
-            formData.append("isDefault", values.isDefault);
-            formData.append("status", values.status);
-            formData.append("remark", values.remark);
-            if (this.updateRecord) {
-              formData.append("dictCode", this.updateRecord.dictCode);
-              editDictData(formData).then(value => {
-                if (value.code === 0) {
-                  this.$message.success(value.msg);
-                  this.refreshTable();
-                } else {
-                  this.$message.error(value.msg);
-                }
-              })
-            } else {
-              addDictData(formData).then(value => {
-                if (value.code === 0) {
-                  this.$message.success(value.msg);
-                  this.refreshTable();
-                } else {
-                  this.$message.error(value.msg);
-                }
-              })
-            }
-          }
-        });
-        this.confirmLoading = false;
-        this.changeVisible(false);
-        setTimeout(() => {
-          this.form.resetFields()
-        }, 500);
-
-      },
-      /*点击取消*/
-      handleCancel() {
-        this.changeVisible(false);
-        this.form.resetFields()
-      },
+    statusDicts: {
+      type: Array,
+      required: true
+    },
+    updateRecord: {
+      type: Object,
+      required: false
+    },
+    defaultDictType: {
+      type: String,
+      required: false
     }
+  },
+  data() {
+    return {
+      confirmLoading: false,
+      form: this.$form.createForm(this),
+    }
+  },
+  computed: {
+    title() {
+      if (this.isAdd) {
+        return "添加数据"
+      } else {
+        return "编辑数据"
+      }
+    }
+  },
+  methods: {
+    changeVisible(visible) {
+      this.$emit("changeVisible", visible)
+    },
+    refreshTable() {
+      this.$emit("refreshTable")
+    },
+    /*点击确定*/
+    handleOk() {
+      this.confirmLoading = true;
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          let formData = new FormData();
+          formData.append("dictLabel", values.dictLabel);
+          formData.append("dictValue", values.dictValue);
+          formData.append("dictType", values.dictType);
+          formData.append("cssClass", '');
+          formData.append("dictSort", values.dictSort);
+          formData.append("listClass", '');
+          formData.append("isDefault", values.isDefault);
+          formData.append("status", values.status);
+          formData.append("remark", values.remark);
+          if (this.updateRecord) {
+            formData.append("dictCode", this.updateRecord.dictCode);
+            editDictData(formData).then(value => {
+              if (value.code === 0) {
+                this.$message.success(value.msg);
+                this.refreshTable();
+              } else {
+                this.$message.error(value.msg);
+              }
+            })
+          } else {
+            addDictData(formData).then(value => {
+              if (value.code === 0) {
+                this.$message.success(value.msg);
+                this.refreshTable();
+              } else {
+                this.$message.error(value.msg);
+              }
+            })
+          }
+        }
+      });
+      this.confirmLoading = false;
+      this.changeVisible(false);
+      setTimeout(() => {
+        this.form.resetFields()
+      }, 500);
+
+    },
+    /*点击取消*/
+    handleCancel() {
+      this.changeVisible(false);
+      this.form.resetFields()
+    },
   }
+}
 </script>

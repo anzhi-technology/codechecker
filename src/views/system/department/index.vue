@@ -5,13 +5,13 @@
 </template>
 
 <script>
-  import departmentManagement from '@/views/system/department/components/departmentManagement'
-  export default {
-    name: "department",
-    components:{
-      departmentManagement
-    }
+import departmentManagement from '@/views/system/department/components/departmentManagement'
+export default {
+  name: "department",
+  components:{
+    departmentManagement
   }
+}
 </script>
 
 <style scoped>

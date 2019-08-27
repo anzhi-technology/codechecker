@@ -68,102 +68,102 @@
 </template>
 
 <script>
-  import {getNoticeList} from "@/api/system/notice";
-  import initDict from "@/mixins/initDict";
-  import TopTools from "@/components/Table/TopTools";
-  import {getColumn, filterData} from "@/utils/myUtils";
-  import aForm from "./form";
+import {getNoticeList} from "@/api/system/notice";
+import initDict from "@/mixins/initDict";
+import TopTools from "@/components/Table/TopTools";
+import {getColumn, filterData} from "@/utils/myUtils";
+import aForm from "./form";
 
-  export default {
-    name: "userManagement",
-    mixins: [initDict],
-    components: {
-      TopTools,
-      aForm
-    },
-    data() {
-      return {
-        isAdd: true,
-        visible: false,
-        loading: false,
-        updateRecord: null,
-        //columns:[],
-        dataSource: [],
-        tHeader: ["序号", "公告标题", "公告类型", "状态", "创建者", "创建时间"],
-        filterVal: ["noticeId", "noticeTitle", "noticeType", "status", "createBy", "createTime"],
-        downLoadTitle: '公告列表',
-        pagination: {
-          pageSize: 10
-        },
-        searchCondition: "",
-      };
-    },
-    computed: {
-      columns() {
-        const columns = [
-          getColumn("序号", "noticeId", (a, b) => a.noticeId - b.noticeId),
-          getColumn("公告标题", "noticeTitle", (a, b) => a.noticeTitle.localeCompare(b.noticeTitle)),
-          getColumn("公告类型", "noticeType"),
-          getColumn("状态", "status"),
-          getColumn("创建者", "createBy", (a, b) => a.dept.createBy.localeCompare(b.dept.createBy)),
-          getColumn("创建时间", "createTime", (a, b) => (a.createTime < b.createTime ? 1 : -1)),
-          {
-            title: "操作",
-            key: "action",
-            scopedSlots: {customRender: "action"}
-          }
-        ];
-        return columns;
+export default {
+  name: "userManagement",
+  mixins: [initDict],
+  components: {
+    TopTools,
+    aForm
+  },
+  data() {
+    return {
+      isAdd: true,
+      visible: false,
+      loading: false,
+      updateRecord: null,
+      //columns:[],
+      dataSource: [],
+      tHeader: ["序号", "公告标题", "公告类型", "状态", "创建者", "创建时间"],
+      filterVal: ["noticeId", "noticeTitle", "noticeType", "status", "createBy", "createTime"],
+      downLoadTitle: '公告列表',
+      pagination: {
+        pageSize: 10
       },
-      TableData() {
-        return filterData(this.searchCondition, this.dataSource);
-      }
+      searchCondition: "",
+    };
+  },
+  computed: {
+    columns() {
+      const columns = [
+        getColumn("序号", "noticeId", (a, b) => a.noticeId - b.noticeId),
+        getColumn("公告标题", "noticeTitle", (a, b) => a.noticeTitle.localeCompare(b.noticeTitle)),
+        getColumn("公告类型", "noticeType"),
+        getColumn("状态", "status"),
+        getColumn("创建者", "createBy", (a, b) => a.dept.createBy.localeCompare(b.dept.createBy)),
+        getColumn("创建时间", "createTime", (a, b) => (a.createTime < b.createTime ? 1 : -1)),
+        {
+          title: "操作",
+          key: "action",
+          scopedSlots: {customRender: "action"}
+        }
+      ];
+      return columns;
     },
-    created() {
-      this.$nextTick(() => {
-        this.getData();
-        this.getDict();
+    TableData() {
+      return filterData(this.searchCondition, this.dataSource);
+    }
+  },
+  created() {
+    this.$nextTick(() => {
+      this.getData();
+      this.getDict();
+    });
+  },
+  methods: {
+    //子组件传过来的值
+    getSearchVal(msg) {
+      this.searchCondition = msg;
+    },
+    changeVisible(visible) {
+      this.visible = visible
+    },
+    updateNotice(record) {
+      if (record) {
+        this.isAdd = false;
+        this.updateRecord = record;
+      } else {
+        this.isAdd = true;
+        this.updateRecord = null;
+      }
+      this.changeVisible(true);
+    },
+    //获取数据
+    getData() {
+      this.loading = true;
+      getNoticeList().then(res => {
+        if (res.code === 0) {
+          this.loading = false;
+          this.dataSource = res.rows;
+        }
       });
     },
-    methods: {
-      //子组件传过来的值
-      getSearchVal(msg) {
-        this.searchCondition = msg;
-      },
-      changeVisible(visible) {
-        this.visible = visible
-      },
-      updateNotice(record) {
-        if (record) {
-          this.isAdd = false;
-          this.updateRecord = record;
-        } else {
-          this.isAdd = true;
-          this.updateRecord = null;
-        }
-        this.changeVisible(true);
-      },
-      //获取数据
-      getData() {
-        this.loading = true;
-        getNoticeList().then(res => {
-          if (res.code === 0) {
-            this.loading = false;
-            this.dataSource = res.rows;
-          }
-        });
-      },
-    },
-    filters: {
-      lengthLimit(value) {
-        if (value.length > 20) {
-          return value.substr(0, 20) + "..."
-        } else {
-          return value
-        }
+  },
+  filters: {
+    lengthLimit(value) {
+      if (value.length > 20) {
+        return value.substr(0, 20) + "..."
+      } else {
+        return value
       }
     }
-  };
+  }
+};
 </script>
 
 <style lang="less" type="text/less" scoped>

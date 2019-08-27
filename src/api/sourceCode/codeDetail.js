@@ -12,7 +12,7 @@ export function getVulnerabilities(projectId,data = {}) {
 
 /*获取文件源代码*/
 export function getFileContent(data = {}) {
-  return post(`${config.adminPrefix}/content`, data);
+  return post(`${config.adminPrefix}/project/content/`, data);
 }
 
 /*修复建议,解释说明,参考文献,缺陷审计*/

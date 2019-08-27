@@ -39,46 +39,46 @@
 </template>
 
 <script>
-  import {getSingleProject} from "@/api/sourceCode/list";
-  import {timeToDateString} from "@/utils/myUtils"
-  export default {
-    name: "projectInformation",
-    data() {
-      return {
-        listData: {}
-      }
+import {getSingleProject} from "@/api/sourceCode/list";
+import {timeToDateString} from "@/utils/myUtils"
+export default {
+  name: "projectInformation",
+  data() {
+    return {
+      listData: {}
+    }
+  },
+  watch: {
+    //监听相同路由下参数变化的时候，从而实现异步刷新
+    '$route'(to, from) {
+      //做一些路由变化的响应
+      //重新获取数据
+      this.getData();
     },
-    watch: {
-      //监听相同路由下参数变化的时候，从而实现异步刷新
-      '$route'(to, from) {
-        //做一些路由变化的响应
-        //重新获取数据
-        this.getData();
-      },
-    },
-    beforeMount() {
-      this.$nextTick(() => {
-        this.getData();
-      });
-    },
-    methods: {
-      /*获取信息*/
-      getData() {
-        let sid = this.$route.params.parameter;
-        getSingleProject(sid).then(res => {
-          let data = res.data;
-          let newData = {};
-          newData.name = data.name;
-          newData.lang = data.lang;
-          newData.projectType = data.isMaven === 1 ? "Maven工程":"普通工程";
-          newData.createDate = timeToDateString(data.createDate);
-          newData.status = data.status;
-          newData.lastUpdate = timeToDateString(data.lastUpdate);
-          this.listData = newData;
-        })
-      }
+  },
+  beforeMount() {
+    this.$nextTick(() => {
+      this.getData();
+    });
+  },
+  methods: {
+    /*获取信息*/
+    getData() {
+      let sid = this.$route.params.parameter;
+      getSingleProject(sid).then(res => {
+        let data = res.data;
+        let newData = {};
+        newData.name = data.name;
+        newData.lang = data.lang;
+        newData.projectType = data.isMaven === 1 ? "Maven工程":"普通工程";
+        newData.createDate = timeToDateString(data.createDate);
+        newData.status = data.status;
+        newData.lastUpdate = timeToDateString(data.lastUpdate);
+        this.listData = newData;
+      })
     }
   }
+}
 </script>
 
 <style scoped>

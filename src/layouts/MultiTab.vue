@@ -159,7 +159,7 @@ export default {
             userSelect: 'none'
           }}>{title}</span>
         </a-dropdown>
-      );
+      )
     }
   },
   render() {
@@ -177,7 +177,7 @@ export default {
           key={page.fullPath}
           closable={pages.length > 1}
         />
-      );
+      )
     });
 
     return (
@@ -203,7 +203,7 @@ export default {
           </a-tabs>
         </div>
       </div>
-    );
+    )
   }
 };
 </script>

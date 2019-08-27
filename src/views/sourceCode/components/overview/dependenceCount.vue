@@ -9,85 +9,85 @@
 </template>
 
 <script>
-  import echarts from 'echarts'
-  // import debounce from 'lodash/debounce'   //防抖
-  import {addListener, removeListener} from 'resize-detector' //echart 位置
-  import {getDependencyCount} from "@/api/sourceCode/overview";
+import echarts from 'echarts'
+// import debounce from 'lodash/debounce'   //防抖
+import {addListener, removeListener} from 'resize-detector' //echart 位置
+import {getDependencyCount} from "@/api/sourceCode/overview";
 
-  import {isNull} from "@/utils/myUtils"
+import {isNull} from "@/utils/myUtils"
 
-  export default {
-    name: "dependenceChart",
-    data() {
-      return {
-        chart: null,
-        dependenceData: [],
-        loading: true,
-        visible: false
+export default {
+  name: "dependenceChart",
+  data() {
+    return {
+      chart: null,
+      dependenceData: [],
+      loading: true,
+      visible: false
+    }
+  },
+  mounted() {
+    getDependencyCount().then(res => {
+
+      this.loading = false;
+      let projectDependenceData = res.data.project_dependency;
+      if (!isNull(projectDependenceData)) {
+        let grepData = projectDependenceData.filter(item => !isNull(item.dependencies_num));
+        grepData.forEach(item => {
+          this.dependenceData.push({"name": item.name, "value": item.vulnerabilities_num});
+        })
+      } else {
+        this.visible = true;
       }
-    },
-    mounted() {
-      getDependencyCount().then(res => {
 
-        this.loading = false;
-        let projectDependenceData = res.data.project_dependency;
-        if (!isNull(projectDependenceData)) {
-          let grepData = projectDependenceData.filter(item => !isNull(item.dependencies_num));
-          grepData.forEach(item => {
-            this.dependenceData.push({"name": item.name, "value": item.vulnerabilities_num});
-          })
-        } else {
-          this.visible = true;
-        }
+      this.option = {
+        tooltip: {
+          trigger: 'item',
+          formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        series: [
+          {
+            name: '漏洞总数',
+            type: 'pie',
+            roseType: 'radius',
+            label: {
+              normal: {
+                show: false,
+                position: 'center'
+              }
+            },
+            labelLine: {
+              normal: {
+                show: false
+              }
+            },
+            radius: ['10%', '90%'],
+            data: this.dependenceData
+          }
+        ]
+      };
+      this.renderChart();
+    });
+  },
+  methods: {
+    resize() {
+      this.chart.resize();
+    },
+    renderChart() {
+      // 基于准备好的dom，初始化echarts实例
+      this.chart = echarts.init(this.$refs.dependenceChart);
+      addListener(this.$refs.dependenceChart, this.resize);
+      // 绘制图表
+      this.chart.setOption(this.option);
+    },
+  },
+  beforeDestroy() {
+    removeListener(this.$refs.dependenceChart, this.resize);
+    this.chart.dispose();
+    this.chart = null;
+  },
 
-        this.option = {
-          tooltip: {
-            trigger: 'item',
-            formatter: "{a} <br/>{b}: {c} ({d}%)"
-          },
-          series: [
-            {
-              name: '漏洞总数',
-              type: 'pie',
-              roseType: 'radius',
-              label: {
-                normal: {
-                  show: false,
-                  position: 'center'
-                }
-              },
-              labelLine: {
-                normal: {
-                  show: false
-                }
-              },
-              radius: ['10%', '90%'],
-              data: this.dependenceData
-            }
-          ]
-        };
-        this.renderChart();
-      });
-    },
-    methods: {
-      resize() {
-        this.chart.resize();
-      },
-      renderChart() {
-        // 基于准备好的dom，初始化echarts实例
-        this.chart = echarts.init(this.$refs.dependenceChart);
-        addListener(this.$refs.dependenceChart, this.resize);
-        // 绘制图表
-        this.chart.setOption(this.option);
-      },
-    },
-    beforeDestroy() {
-      removeListener(this.$refs.dependenceChart, this.resize);
-      this.chart.dispose();
-      this.chart = null;
-    },
-
-  }
+}
 </script>
 
 <style scoped>

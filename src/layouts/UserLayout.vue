@@ -80,7 +80,7 @@ export default {
             this.loading = false;
             this.$router.push('/');
           })
-         /* let formData = new FormData();
+          /* let formData = new FormData();
           formData.append('username', values.userName);
           formData.append('password', values.password);
           formData.append('rememberMe', values.remember);

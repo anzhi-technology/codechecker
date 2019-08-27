@@ -16,39 +16,39 @@
 
 <script>
 
-  export default {
-    name: "topTools",
-    props: {
-      dataSource: {
-        type: Array,
-        required: true
-      },
-      tHeader: {
-        type: Array,
-        required: true
-      },
-      filterVal: {
-        type: Array,
-        required: true
-      },
-      downLoadTitle: {
-        type: String,
-        required: true
-      },
+export default {
+  name: "topTools",
+  props: {
+    dataSource: {
+      type: Array,
+      required: true
     },
-    data() {
-      return {
-        searchCondition: null,
-      }
+    tHeader: {
+      type: Array,
+      required: true
     },
-    watch: {
-      'searchCondition': function () {
-        this.$emit("getSearchCondition", this.searchCondition)
-      }
+    filterVal: {
+      type: Array,
+      required: true
     },
-    methods: {
-      //导出报告
-      exportData() {
+    downLoadTitle: {
+      type: String,
+      required: true
+    },
+  },
+  data() {
+    return {
+      searchCondition: null,
+    }
+  },
+  watch: {
+    'searchCondition': function() {
+      this.$emit("getSearchCondition", this.searchCondition)
+    }
+  },
+  methods: {
+    //导出报告
+    exportData() {
         //this.downloadLoading = true;
         import("@/vendor/Export2Excel").then(excel => {
           const tHeader = this.tHeader;
@@ -58,12 +58,12 @@
           excel.export_json_to_excel(tHeader, data, this.downLoadTitle);
           //this.downloadLoading = false
         });
-      },
-      formatJson(filterVal, jsonData) {
-        return jsonData.map(v => filterVal.map(j => v[j]));
-      }
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]));
     }
   }
+}
 </script>
 
 <style lang="less" type="text/less" scoped>

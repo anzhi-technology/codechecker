@@ -32,11 +32,11 @@
             <a-form-item label="菜单名称" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
               <a-input placeholder="菜单名称"
                        v-decorator="['menuName', {
-                       initialValue: updateRecord?updateRecord.menuName:'',
-                       rules: [
-                       { required: true, message: '菜单名称不能为空！' },
-                       { validator:checkMenuName}
-                       ], validateTrigger: 'blur' }]"/>
+                         initialValue: updateRecord?updateRecord.menuName:'',
+                         rules: [
+                           { required: true, message: '菜单名称不能为空！' },
+                           { validator:checkMenuName}
+                         ], validateTrigger: 'blur' }]"/>
             </a-form-item>
 
             <a-form-item v-show="this.menuTypes !== 'F'" label="请求地址" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }" >
@@ -75,127 +75,127 @@
   </div>
 </template>
 <script>
-  import {addMenu, editMenu,checkMenuNameUnique} from "@/api/system/menu";
-  export default {
-    props: {
-      isAdd: {
-        type: Boolean,
-        required: true
-      },
-      visible: {
-        type: Boolean,
-        required: true
-      },
-      menuStatusDicts: {
-        type: Array,
-        required: true
-      },
-      updateRecord: {
-        type: Object,
-        required: false
-      },
-      menuTreeData: {
-        type: Array,
-        required: true
-      },
+import {addMenu, editMenu,checkMenuNameUnique} from "@/api/system/menu";
+export default {
+  props: {
+    isAdd: {
+      type: Boolean,
+      required: true
     },
-    data() {
-      return {
-        form: this.$form.createForm(this),
-        confirmLoading: false,
-        menuTypes:''
-      }
+    visible: {
+      type: Boolean,
+      required: true
     },
-    computed: {
-      title(){
-        if (this.isAdd) {
-          return "添加菜单"
-        }else {
-          return "编辑菜单"
-        }
-      }
+    menuStatusDicts: {
+      type: Array,
+      required: true
     },
-    methods: {
-      changeVisible(visible) {
-        this.$emit("changeVisible",visible)
-      },
-      refreshTable(){
-        this.$emit("refreshTable")
-      },
-      //校验菜单名称
-      checkMenuName(rule, value, callback){
-        let formData = new FormData();
-        let parentId = this.updateRecord?this.updateRecord.parentId:'0';
-        if(!this.isAdd) formData.append("menuId",this.updateRecord.menuId);
-        formData.append("parentId",parentId);
-        formData.append("menuName",value);
-        checkMenuNameUnique(formData).then(res => {
-          if (res === 0) {
-            callback();
-          } else {
-            return callback(new Error('菜单已经存在！'));
-          }
-        });
-      },
-      /*点击确定*/
-      handleOk() {
-        this.confirmLoading = true;
-        this.form.validateFields((err, values) => {
-          if (!err){
-            let parentId = values.parentName?values.parentName:0;
-            let formData = new FormData();
-            formData.append("menuType",values.menuType);
-            formData.append("menuName",values.menuName);
-            formData.append("url",values.url || '');
-            formData.append("target","menuItem");
-            formData.append("perms",values.perms || '');
-            formData.append("orderNum",values.orderNum);
-            formData.append("icon",values.icon || '');
-            formData.append("visible",values.visible);
-            if (this.isAdd) {
-              if(this.updateRecord){
-                formData.append("parentId",this.updateRecord.parentId);
-                console.log(this.updateRecord.parentId);
-              }else{
-                formData.append("parentId",parentId);
-              }
-              addMenu(formData).then(res => {
-                if (res.code === 0){
-                  this.$message.success(res.msg);
-                  this.refreshTable();
-                }else {
-                  this.$message.error(res.msg);
-                }
-              })
-            }else {
-              formData.append("menuId",this.updateRecord.menuId);
-              formData.append("parentId",this.updateRecord.parentId);
-              editMenu(formData).then(res => {
-                if (res.code === 0){
-                  this.$message.success(res.msg);
-                  this.refreshTable();
-                }else {
-                  this.$message.error(res.msg);
-                }
-              })
-            }
-          }
-        });
-        this.confirmLoading = false;
-        this.changeVisible(false);
-        setTimeout(() => {
-          this.form.resetFields()
-        }, 500);
-      },
-      /*点击取消*/
-      handleCancel() {
-        this.changeVisible(false);
-        this.form.resetFields()
-      },
-      //菜单类型的转换
-      onMenuTypeChange(e){
-        this.menuTypes = e.target.value;
+    updateRecord: {
+      type: Object,
+      required: false
+    },
+    menuTreeData: {
+      type: Array,
+      required: true
+    },
+  },
+  data() {
+    return {
+      form: this.$form.createForm(this),
+      confirmLoading: false,
+      menuTypes:''
+    }
+  },
+  computed: {
+    title(){
+      if (this.isAdd) {
+        return "添加菜单"
+      }else {
+        return "编辑菜单"
       }
     }
+  },
+  methods: {
+    changeVisible(visible) {
+      this.$emit("changeVisible",visible)
+    },
+    refreshTable(){
+      this.$emit("refreshTable")
+    },
+    //校验菜单名称
+    checkMenuName(rule, value, callback){
+      let formData = new FormData();
+      let parentId = this.updateRecord?this.updateRecord.parentId:'0';
+      if(!this.isAdd) formData.append("menuId",this.updateRecord.menuId);
+      formData.append("parentId",parentId);
+      formData.append("menuName",value);
+      checkMenuNameUnique(formData).then(res => {
+        if (res === 0) {
+          callback();
+        } else {
+          return callback(new Error('菜单已经存在！'));
+        }
+      });
+    },
+    /*点击确定*/
+    handleOk() {
+      this.confirmLoading = true;
+      this.form.validateFields((err, values) => {
+        if (!err){
+          let parentId = values.parentName?values.parentName:0;
+          let formData = new FormData();
+          formData.append("menuType",values.menuType);
+          formData.append("menuName",values.menuName);
+          formData.append("url",values.url || '');
+          formData.append("target","menuItem");
+          formData.append("perms",values.perms || '');
+          formData.append("orderNum",values.orderNum);
+          formData.append("icon",values.icon || '');
+          formData.append("visible",values.visible);
+          if (this.isAdd) {
+            if(this.updateRecord){
+              formData.append("parentId",this.updateRecord.parentId);
+              console.log(this.updateRecord.parentId);
+            }else{
+              formData.append("parentId",parentId);
+            }
+            addMenu(formData).then(res => {
+              if (res.code === 0){
+                this.$message.success(res.msg);
+                this.refreshTable();
+              }else {
+                this.$message.error(res.msg);
+              }
+            })
+          }else {
+            formData.append("menuId",this.updateRecord.menuId);
+            formData.append("parentId",this.updateRecord.parentId);
+            editMenu(formData).then(res => {
+              if (res.code === 0){
+                this.$message.success(res.msg);
+                this.refreshTable();
+              }else {
+                this.$message.error(res.msg);
+              }
+            })
+          }
+        }
+      });
+      this.confirmLoading = false;
+      this.changeVisible(false);
+      setTimeout(() => {
+        this.form.resetFields()
+      }, 500);
+    },
+    /*点击取消*/
+    handleCancel() {
+      this.changeVisible(false);
+      this.form.resetFields()
+    },
+    //菜单类型的转换
+    onMenuTypeChange(e){
+      this.menuTypes = e.target.value;
+    }
   }
+}
 </script>

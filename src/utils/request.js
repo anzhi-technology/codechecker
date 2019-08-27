@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'axios'// 引入qs模块，用来序列化post类型的数据
 import router from '@/router/router';
 import { message } from 'ant-design-vue';
 
@@ -35,9 +36,10 @@ service.interceptors.response.use(
           path: '/login'
         });
         return Promise.reject(response.data.msg);
-      }else if(response.data.status === 500){
+      } else if(response.data.code === 500) {
         message.error(response.data.msg);
-      } else {
+        return Promise.reject(response.data.msg);
+      }else {
         return response.data;
       }
     }
@@ -52,7 +54,7 @@ service.interceptors.response.use(
         path: '/login'
       });
     } else {
-      message.error('权限不足,请联系管理员!');
+      message.error('服务器被吃了⊙﹏⊙∥');
     }
 
     return Promise.resolve(error);

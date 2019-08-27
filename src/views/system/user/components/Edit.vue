@@ -8,26 +8,26 @@
               <a-form-item label="用户名称" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
                 <a-input placeholder="请输入用户名称"
                          v-decorator="['userName',
-                         {
-                         initialValue:SingleData.userName,
-                         rules: [{ required: true, message: '用户名不能为空！' }, {max:30,message:'最大长度不能超过30'}],
-                         validateTrigger: 'blur'
-                         }]"/>
+                                       {
+                                         initialValue:SingleData.userName,
+                                         rules: [{ required: true, message: '用户名不能为空！' }, {max:30,message:'最大长度不能超过30'}],
+                                         validateTrigger: 'blur'
+                                       }]"/>
               </a-form-item>
               <a-form-item label="手机号码" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
                 <a-input placeholder="请输入手机号码"
                          v-decorator="['phonenumber',
-                         {
-                         initialValue:SingleData.phonenumber,
-                         rules: [{ required: true, message: '手机号码不能为空!' },
-                                 { validator:checkPonenumber}],
-                        validateTrigger: 'blur'},
-                                        ]"/>
+                                       {
+                                         initialValue:SingleData.phonenumber,
+                                         rules: [{ required: true, message: '手机号码不能为空!' },
+                                                 { validator:checkPonenumber}],
+                                         validateTrigger: 'blur'},
+                         ]"/>
               </a-form-item>
               <a-form-item label="登录账号" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
                 <a-input placeholder="请输入登录账号" disabled
                          v-decorator="['loginName',
-                         {initialValue:SingleData.loginName}]"/>
+                                       {initialValue:SingleData.loginName}]"/>
               </a-form-item>
               <a-form-item label="用户性别" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
                 <a-select placeholder="请选择性别" v-decorator="['sex', {initialValue:SingleData.sex}]">
@@ -60,17 +60,17 @@
               <a-form-item label="邮箱" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
                 <a-input placeholder="请输入邮箱"
                          v-decorator="[
-                    'email',
-                    {
-                      initialValue:SingleData.email,
-                      rules: [
-                        { type: 'email', message: '请输入正确的邮箱!' },
-                        { required: true, message: '邮箱不能为空!' },
-                        { validator:checkEmail},
-                      ],
-                      validateTrigger: 'blur'
-                    }
-                  ]"
+                           'email',
+                           {
+                             initialValue:SingleData.email,
+                             rules: [
+                               { type: 'email', message: '请输入正确的邮箱!' },
+                               { required: true, message: '邮箱不能为空!' },
+                               { validator:checkEmail},
+                             ],
+                             validateTrigger: 'blur'
+                           }
+                         ]"
                 />
               </a-form-item>
               <a-form-item label="用户状态" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
@@ -145,7 +145,7 @@ export default {
   methods: {
     //获取单个用户信息
     getSingleData() {
-     return getSingleUser(this.projectId).then(res => {
+      return getSingleUser(this.projectId).then(res => {
         if (res.code === 0) {
           const data = res.data.user;
           const posts = [];

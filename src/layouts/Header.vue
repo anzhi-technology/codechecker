@@ -2,7 +2,7 @@
   <div class="header-right">
     <div class="header-user-con">
       <!--<div class="welcomeText">-->
-        <!--<span style="color:#A9A9A9;font-size: 13px">欢迎来到源码审计系统...</span>-->
+      <!--<span style="color:#A9A9A9;font-size: 13px">欢迎来到源码审计系统...</span>-->
       <!--</div>-->
 
       <!-- 用户头像 -->
@@ -11,7 +11,7 @@
           <a-menu-item key="1" @click="LogOut">退出登录</a-menu-item>
         </a-menu>
         <div>
-          <a-avatar style="backgroundColor:#108ee9" size="small" icon="user" />&nbsp;
+          <a-avatar style="backgroundColor:#108ee9" size="small" icon="user"/>&nbsp;
           <span style="color:#000000;font-size: 15px">admin</span>
         </div>
       </a-dropdown>
@@ -20,29 +20,30 @@
 </template>
 
 <script>
-  import {removeObjArr,getObjArr} from '@/utils/auth'
-  import {logout} from '@/api/user'
-  import fullScreen from "@/components/fullScreen/index"
-  export default {
-    name: 'Header',
-    data() {
-      return {
-        //fullscreen: false
-      };
-    },
-    components:{
-      fullScreen
-    },
-    methods: {
-      LogOut() {
-        logout().then(res => {
-          removeObjArr();
-          //window.location.href = "/login";
-         this.$router.push({path: '/login'});
-        });
-      }
+import {removeObjArr} from '@/utils/auth'
+import {logout} from '@/api/user'
+//import fullScreen from "@/components/fullScreen/index"
+
+export default {
+  name: 'Header',
+  data() {
+    return {
+      //fullscreen: false
+    };
+  },
+  // components: {
+  //   fullScreen
+  // },
+  methods: {
+    LogOut() {
+      logout().then(() => {
+        removeObjArr();
+        // window.location.href = "/login";
+        this.$router.push({path: '/login'});
+      });
     }
-  };
+  }
+};
 </script>
 
 <style lang="less" type="text/less" scoped>
@@ -56,8 +57,6 @@
     background: #fff;
   }
 
-
-
   .header-right {
     float: right;
     padding-right: 50px;
@@ -68,17 +67,6 @@
     height: 70px;
     align-items: center;
   }
-
-  /*.btn-fullscreen {
-    transform: rotate(45deg);
-    margin-right: 20px;
-    font-size: 16px;
-  }
-*/
-  /*.welcomeText {
-    margin-right: 20px;
-    font-size: 13px;
-  }*/
 
   .user-name {
     margin-left: 10px;
