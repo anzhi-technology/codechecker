@@ -7,7 +7,7 @@
     </span>
     <template v-for="item in props.menuInfo.children">
       <a-menu-item
-        v-if="!item.children"
+        v-if="item.children.length === 0"
         :key="item.path"
         @click="() =>parent.$router.push({ path: item.path, query: parent.$route.query })">
         <!--<span v-if="item.meta.icon" :class="props.menuInfo.meta.icon"></span>-->

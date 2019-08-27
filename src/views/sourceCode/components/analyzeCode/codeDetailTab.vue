@@ -13,6 +13,7 @@
         <!-- codemirror -->
         <codemirror v-model="pane.content"
                     :options="cmOption"
+                    size="1000px"
                     @cursorActivity="onCmCursorActivity"
                     @ready="onCmReady"
                     @focus="onCmFocus"
@@ -162,6 +163,7 @@ export default {
       formData.append("filePath", this.filePath);
       return getFileContent(formData).then(res => {
         this.code = res.data.content.join("\n");
+        console.log(this.$refs.myCm);
       });
     },
     onCmCursorActivity(codemirror) {
