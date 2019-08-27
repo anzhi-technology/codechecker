@@ -150,7 +150,7 @@ export default {
           const data = res.data.user;
           const posts = [];
           const roles = [];
-          data.posts.forEach(obj => posts.push(obj.postId));
+          res.data.posts.forEach(obj => posts.push(obj.postId));
           data.roles.forEach(obj => roles.push(obj.roleId));
           const dept = data.dept.deptId.toString() + "," + data.dept.deptName;
           let switchStatus = 'checked';

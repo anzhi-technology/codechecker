@@ -114,6 +114,11 @@ export default {
       });
     });
   },
+  computed: {
+    codemirror() {
+      return this.$refs.myCm.codemirror
+    }
+  },
   methods: {
     /*新增和删除页签的回调，在 type="editable-card" 时有效*/
     onEdit(targetKey, action) {
@@ -163,7 +168,6 @@ export default {
       formData.append("filePath", this.filePath);
       return getFileContent(formData).then(res => {
         this.code = res.data.content.join("\n");
-        console.log(this.$refs.myCm);
       });
     },
     onCmCursorActivity(codemirror) {
