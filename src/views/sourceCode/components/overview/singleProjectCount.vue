@@ -246,12 +246,13 @@ export default {
       addListener(this.$refs.singleProjectChart, this.resize);
       // 绘制图表
       this.chart.setOption(this.option);
+
     },
   },
   beforeDestroy() {
     removeListener(this.$refs.singleProjectChart, this.resize);
-    this.chart.dispose(); //销毁，防止内存泄漏
-    this.chart = null;
+    // this.chart.dispose(); //销毁，防止内存泄漏
+    // this.chart = null;
   },
 }
 </script>

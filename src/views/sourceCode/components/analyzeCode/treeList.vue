@@ -23,6 +23,7 @@
 
 <script>
 import Bus from '@/utils/bus';
+import _ from "underscore" //引入数据处理的分装方法
 
 export default {
   name: "treeList",
@@ -53,6 +54,8 @@ export default {
     onSelect(key, e) {
       if(e.selected){
         let detail = e.selectedNodes[0].data.props.detail;
+        let preciseLineArray = _.pluck(detail, 'preciseLine');
+
         let ruleID =detail[0].ruleID;
         let newFunctionNamespaces = detail[0].functionNamespaces.split('.').join('/');
         let sourceFilePath = detail[0].sourceFilePath;
@@ -63,7 +66,7 @@ export default {
         }
         let title = sourceFilePath.split('/').pop(); //文件名
         //调用传参方法
-        let dataArray = {filePath:this.filePath,ruleID:ruleID,fileName:title,key:key};
+        let dataArray = {filePath:this.filePath,ruleID:ruleID,fileName:title,key:key,preciseLineArray};
         this.setData(dataArray);
         this.setEntryDtos(detail);
       }

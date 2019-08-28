@@ -51,9 +51,8 @@ export default {
             // 判断是否登录成功
             if (res.code === 0) {
               this.loading = false;
-              //this.$router.push('/sourceCode/overview');
+              this.$router.push('/sourceCode/overview');
               //window.location.href = "/imonitor/dashboard/home";
-              this.$router.push('/system/menu/index');
             }
           });
         }

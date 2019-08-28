@@ -30,6 +30,9 @@
               <a-select v-decorator="['dataScope',{initialValue:dataRecord?dataRecord.dataScope:''}]" @change="handleChange">
                 <a-select-option value="1">全部数据权限</a-select-option>
                 <a-select-option value="2">自定数据权限</a-select-option>
+                <a-select-option value="3">部门数据权限</a-select-option>
+                <a-select-option value="4">部门及以下数据权限</a-select-option>
+                <a-select-option value="5">仅本人数据权限</a-select-option>
               </a-select>
               <a-icon type="exclamation-circle" /> 特殊情况下，设置为“自定数据权限”
             </a-form-item>

@@ -13,12 +13,8 @@
         <!-- codemirror -->
         <codemirror v-model="pane.content"
                     :options="cmOption"
-                    size="1000px"
-                    @cursorActivity="onCmCursorActivity"
-                    @ready="onCmReady"
-                    @focus="onCmFocus"
-                    @blur="onCmBlur"
                     ref="myCm"
+
         >
         </codemirror>
       </a-tab-pane>
@@ -29,6 +25,7 @@
 <script>
 import {getFileContent} from "@/api/sourceCode/codeDetail";
 import Bus from '@/utils/bus';
+import _ from "underscore" //引入数据处理的分装方法
 import {codemirror} from 'vue-codemirror' // require component
 import 'codemirror/lib/codemirror.css'  // require styles
 import 'codemirror/mode/vue/vue.js'
@@ -79,6 +76,7 @@ export default {
       newTabIndex: 0,
       filePath: '',
       fileName: '',
+      preciseLineArray:[],
       newTabKey: '',
       ruleID: '',
       cmOption: {
@@ -92,6 +90,8 @@ export default {
         keyMap: "sublime",
         mode: 'text/x-java',
         theme: "monokai",
+        highlightSelectionMatches: {showToken: /\w/, annotateScrollbar: true},
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter", "CodeMirror-selected"],
         extraKeys: {
           'F11'(cm) {
             cm.setOption("fullScreen", !cm.getOption("fullScreen"))
@@ -103,21 +103,36 @@ export default {
       },
     }
   },
+  computed: {
+    codemirror() {
+      return this.$refs.myCm
+    },
+  },
   mounted() {
+    //this.setCodemirror();
     Bus.$on('getData', (data) => {
       this.filePath = data.filePath;
       this.ruleID = data.ruleID;
       this.fileName = data.fileName;
       this.newTabKey = data.key;
+      this.preciseLineArray = data.preciseLineArray;
+      //let fristPreciseLine = _.min(preciseLineArray);
+
       this.getData().then(() => {
-        this.add();
+        this.add();//添加标签
       });
     });
+    //this.setCodemirror();
   },
-  computed: {
-    codemirror() {
-      return this.$refs.myCm.codemirror
-    }
+  created() {
+    this.$nextTick(() => {
+      this.setCodemirror();
+    });
+  },
+  updated(){
+    this.$nextTick(() => {
+      this.setCodemirror();
+    });
   },
   methods: {
     /*新增和删除页签的回调，在 type="editable-card" 时有效*/
@@ -141,7 +156,8 @@ export default {
       //如果只有一个tab 设置为不可关闭
       if (panes.length !== 1) panes[0].closable = true;
       this.panes = panes;
-      this.activeKey = activeKey
+      this.activeKey = activeKey;
+
     },
     /*清除标签*/
     remove(targetKey) {
@@ -170,18 +186,33 @@ export default {
         this.code = res.data.content.join("\n");
       });
     },
-    onCmCursorActivity(codemirror) {
-      //console.log('onCmCursorActivity', codemirror)
-    },
-    onCmReady(codemirror) {
-      // console.log('onCmReady', codemirror)
-    },
-    onCmFocus(codemirror) {
-      // console.log('onCmFocus', codemirror)
-    },
-    onCmBlur(codemirror) {
-      //console.log('onCmBlur', codemirror)
+    /*setCodemirror*/
+    setCodemirror(){
+      this.codemirror.forEach(obj => {
+        //设置codemirror的高度
+        obj.codemirror.setSize('auto', '400px');
+        //将第一个精确行放在视野中间
+        if(this.preciseLineArray.length !== 0){
+          let fristPreciseLine = _.min(this.preciseLineArray);
+          let h = obj.codemirror.getScrollInfo().clientHeight;
+          let coords = obj.codemirror.charCoords({
+            line: parseInt(fristPreciseLine),
+            ch: 0
+          }, "local");
+          obj.codemirror.scrollTo(null, (coords.top + coords.bottom - h) / 2);
+          this.preciseLineArray.forEach(item=>{
+            obj.codemirror.getDoc().addLineClass((parseInt(item) - 1), "background", "lineDemo");
+          })
+        }
+      });
     }
   },
 }
 </script>
+<style>
+  /* codemirror 高亮行样式 */
+  .lineDemo{
+    background-color:#f3f3f4;
+    opacity: 0.4;
+  }
+</style>
