@@ -42,10 +42,17 @@ export const buttonRouter = [
       },
       {
         path: '/sourceCode/summary/:parameter',
-        name: 'summary',
+        name: 'sourceCodeSummary',
         hideInMenu: true,
         meta: {title: '项目统计'},
         component: () => import(/* webpackChunkName: "sourceCode" */ '@/views/sourceCode/summary')
+      },
+      {
+        path: '/dependence/summary/:parameter',
+        name: 'dependenceSummary',
+        hideInMenu: true,
+        meta: {title: '依赖统计'},
+        component: () => import(/* webpackChunkName: "sourceCode" */ '@/views/dependence/summary')
       },
       {
         path: '/system/user/add',

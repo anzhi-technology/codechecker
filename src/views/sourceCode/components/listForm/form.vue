@@ -194,16 +194,11 @@ export default {
           let projectJson = this.initProjectDataJson(values);
           if (isNull(this.sid)) {
             addProject(projectJson).then(res => {
-              if (res.status === 200) {
-                this.$router.push("/sourceCode/list");
-              }
+              this.$router.push("/sourceCode/list");
             });
           } else {
-            console.log(projectJson);
             editProject(projectJson).then(res => {
-              if (res.code === 0) {
-                this.$router.push("/sourceCode/list");
-              }
+              this.$router.push("/sourceCode/list");
             })
           }
         }

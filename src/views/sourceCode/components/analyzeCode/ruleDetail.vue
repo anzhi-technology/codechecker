@@ -7,14 +7,16 @@
       <a-tab-pane tab="参考文献" key="4" class="tabContent" v-html="references"></a-tab-pane>
       <a-tab-pane tab="结点追踪" class="tabContent" key="5">
         <a-timeline>
-          <a-timeline-item v-if="language === 'en'" v-for="item in entryDtos">
-            <p>action:{{item.action}}</p>
-            <p>snippet:{{item.snippet}}</p>
-          </a-timeline-item>
-          <a-timeline-item v-if="language === 'cn'" v-for="item in entryDtos">
-            <p>操作方法:{{item.action}}</p>
-            <p>代码段:{{item.snippet}}</p>
-          </a-timeline-item>
+          <template v-for="(item, index) in entryDtos">
+            <a-timeline-item v-if="language === 'en'" :key="index">
+              <p>action:{{item.action}}</p>
+              <p>snippet:{{item.snippet}}</p>
+            </a-timeline-item>
+            <a-timeline-item v-if="language === 'cn'" :key="index">
+              <p>操作方法:{{item.action}}</p>
+              <p>代码段:{{item.snippet}}</p>
+            </a-timeline-item>
+          </template>
         </a-timeline>
       </a-tab-pane>
       <a-button slot="tabBarExtraContent" size="small" v-text="buttonName" type="primary" @click="translation"></a-button>
@@ -37,7 +39,7 @@ export default {
       explanation: null,
       references: null,
       entryDtos: null,
-      buttonName:"翻译",
+      buttonName:"中文",
       language:"en"
     }
   },
@@ -87,9 +89,11 @@ export default {
     },
     translation(){
       if(this.language === "en"){
-        this.language = "cn"
+        this.language = "cn";
+        this.buttonName = "English"
       }else if(this.language === "cn"){
-        this.language = "en"
+        this.language = "en";
+        this.buttonName = "中文"
       }
       this.getData();
     }
@@ -104,7 +108,7 @@ export default {
     margin-right:2px;
   }
   .tabContent {
-    padding: 0 10px 10px 10px;
+    padding: 5px 10px 10px 10px;
     height:280px;
     overflow:auto
   }
