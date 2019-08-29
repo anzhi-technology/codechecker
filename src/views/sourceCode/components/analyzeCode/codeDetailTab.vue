@@ -190,7 +190,7 @@ export default {
     setCodemirror(){
       this.codemirror.forEach(obj => {
         //设置codemirror的高度
-        obj.codemirror.setSize('auto', '400px');
+        obj.codemirror.setSize('auto', '350px');
         //将第一个精确行放在视野中间
         if(this.preciseLineArray.length !== 0){
           let fristPreciseLine = _.min(this.preciseLineArray);

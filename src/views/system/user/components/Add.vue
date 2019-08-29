@@ -27,20 +27,22 @@
                          ]"/>
               </a-form-item>
               <a-form-item label="用户性别" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
-                <a-select placeholder="请选择性别" v-decorator="['sex']">
+                <a-select placeholder="请选择性别" v-decorator="['sex',{rules: [{ required: true, message: '性别不能为空!' }]}]">
                   <a-select-option v-for="item in SexDicts" :key="item.dictCode" :value="item.dictValue">{{ item.dictLabel }}
                   </a-select-option>
                 </a-select>
               </a-form-item>
               <a-form-item label="岗位" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
-                <a-select mode="multiple" placeholder="请选择岗位" style="width: 100%" v-decorator="['post']">
-                  <a-select-option v-for="item in postData" v-if="item.status ==='0'"  :key="item.postId">{{ item.postName }}</a-select-option>
-                  <a-select-option v-for="item in postData" v-if="item.status ==='1'" disabled :key="item.postId">{{ item.postName }}</a-select-option>
+                <a-select mode="multiple" placeholder="请选择岗位" style="width: 100%" v-decorator="['post', {rules: [{ required: true, message: '岗位不能为空!' }]}]">
+                  <template v-for="item in postData">
+                    <a-select-option  v-if="item.status ==='0'"  :key="item.postId">{{ item.postName }}</a-select-option>
+                    <a-select-option  v-if="item.status ==='1'" disabled :key="item.postId">{{ item.postName }}</a-select-option>
+                  </template>
                 </a-select>
               </a-form-item>
               <a-form-item label="角色" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
                 <!--<a-checkbox-group :options="plainOptions"   @change="onChange"  v-decorator="['role']"/>-->
-                <a-checkbox-group v-decorator="['role']" style="width: 100%;">
+                <a-checkbox-group v-decorator="['role',{rules: [{ required: true, message: '角色不能为空!' }]}]" style="width: 100%;">
                   <a-checkbox v-for="item in roleData" :value="item.roleId" :key="item.roleId">
                     {{item.roleName}}
                   </a-checkbox>
@@ -51,7 +53,10 @@
             <a-col :span="12">
               <a-form-item label="归属部门" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
                 <a-tree-select :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" :treeData="departmentData"
-                               placeholder="请选择归属部门" treeDefaultExpandAll v-decorator="['dept']">
+                               placeholder="请选择归属部门" treeDefaultExpandAll
+                               v-decorator="['dept',
+                                             {rules: [{ required: true, message: '部门不能为空!' }]}
+                               ]">
                 </a-tree-select>
               </a-form-item>
               <a-form-item label="邮箱" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
@@ -207,8 +212,9 @@ export default {
           formData.append("remark", values.remark);
 
           //console.log(values.password);
-          addUser(formData).then(res => {
+          addUser(formData).then(() => {
             this.$message.success('添加成功');
+            this.$router.push('/system/user/index');
           })
         }
       });

@@ -1,11 +1,11 @@
 <template>
   <div class="ruleDetail">
     <a-tabs>
-      <a-tab-pane tab="概况" key="1" v-html="abstractContent"></a-tab-pane>
-      <a-tab-pane tab="修复建议" key="2" v-html="recommendations"></a-tab-pane>
-      <a-tab-pane tab="解释说明" key="3" v-html="explanation"></a-tab-pane>
-      <a-tab-pane tab="参考文献" key="4" v-html="references"></a-tab-pane>
-      <a-tab-pane tab="结点追踪" key="5">
+      <a-tab-pane tab="概况" key="1" class="tabContent" v-html="abstractContent"></a-tab-pane>
+      <a-tab-pane tab="修复建议" key="2" class="tabContent" v-html="recommendations"></a-tab-pane>
+      <a-tab-pane tab="解释说明" key="3" class="tabContent" v-html="explanation"></a-tab-pane>
+      <a-tab-pane tab="参考文献" key="4" class="tabContent" v-html="references"></a-tab-pane>
+      <a-tab-pane tab="结点追踪" class="tabContent" key="5">
         <a-timeline>
           <a-timeline-item v-if="language === 'en'" v-for="item in entryDtos">
             <p>action:{{item.action}}</p>
@@ -102,5 +102,10 @@ export default {
     background: #fff;
     margin-left:2px;
     margin-right:2px;
+  }
+  .tabContent {
+    padding: 0 10px 10px 10px;
+    height:280px;
+    overflow:auto
   }
 </style>
