@@ -64,6 +64,7 @@
                       @changeDataVisible="changeDataVisible($event)"
                       @refreshTable="getData"
                       :departmentTree="departmentTree"
+                      :deptCheckedKeys="deptCheckedKeys"
       />
     </div>
   </div>
@@ -90,6 +91,7 @@ export default {
       dataRecord: null,
       treeData: [],
       menuCheckedKeys: [],
+      deptCheckedKeys:[],
       departmentTree: [],
       //columns:[],
       dataSource: [],
@@ -195,6 +197,7 @@ export default {
         let pIdArray = [];
         checkedArray.forEach( obj => pIdArray.push(obj.pId));
         let newPIdArray = Array.from(new Set(pIdArray));//去重
+        this.menuCheckedKeys = [];
         checkedArray.forEach( obj => this.menuCheckedKeys.push(obj.id));
         //删除pId,返回新的数组
         for(let i = 0;i < newPIdArray.length; i++) {
@@ -216,6 +219,21 @@ export default {
       getDeptByRoleId(record.roleId).then(res => {
         let data = transData(res, "id", "pId");
         this.departmentTree = recursion(data);
+        const checkedArray = res.filter(item => item.checked === true);
+        let pIdArray = [];
+        checkedArray.forEach( obj => pIdArray.push(obj.pId));
+        let newPIdArray = Array.from(new Set(pIdArray));//去重
+        this.deptCheckedKeys = [];
+        checkedArray.forEach( obj => this.deptCheckedKeys.push(obj.id));
+        //删除pId,返回新的数组
+        for(let i = 0;i < newPIdArray.length; i++) {
+          for(let j = 0; j < this.deptCheckedKeys.length; j++) {
+            if(this.deptCheckedKeys[j] === newPIdArray[i]) {
+              this.deptCheckedKeys.splice(j,1);
+              j--;
+            }
+          }
+        }
         this.changeDataVisible(true);
       });
     },

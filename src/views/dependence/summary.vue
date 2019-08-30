@@ -10,9 +10,12 @@
         <br/>
       </a-col>
       <a-col :span="24">
-        <countTable :dataSource="countData"/>
+        <countTable :dataSource="countData" :loading="loading"/>
+        <br/>
       </a-col>
-      <a-col :span="6"></a-col>
+      <a-col :span="24">
+        <detailCollapse :detailData="countData" :flag="flag"/>
+      </a-col>
     </a-row>
   </div>
 </template>
@@ -21,6 +24,7 @@
 import headerCard from  "@/views/dependence/components/summary/headerCard"
 import scanDataSource from "@/views/dependence/components/summary/scanDataSource"
 import countTable from "@/views/dependence/components/summary/countTable"
+import detailCollapse from "@/views/dependence/components/summary/detailCollapse"
 import {getDependenciesReport} from "@/api/dependence/dependence";
 import _ from "underscore" //引入数据处理的分装方法
 
@@ -29,13 +33,16 @@ export default {
   components:{
     headerCard,
     scanDataSource,
-    countTable
+    countTable,
+    detailCollapse
   },
   data(){
     return {
+      loading:false,
       basicContent:{},//四个卡片统计的数据
       dataSource:{}, //扫描源信息
-      countData:[],
+      countData:[], //漏洞信息
+      flag:false
     }
   },
   created(){
@@ -47,7 +54,10 @@ export default {
     /*获取依赖检测的报告数据*/
     getData(){
       let projectId = this.$route.params.parameter;
+      this.loading = true;
       getDependenciesReport(projectId).then(res =>{
+        this.loading = false;
+        this.flag = true;
         let data = res.content;
         //四个card 统计内容
         let vulnerabilitiesDependence = data.dependencies.filter(obj => obj.vulnerabilities.length !== 0);

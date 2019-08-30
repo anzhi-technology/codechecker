@@ -25,7 +25,7 @@
 
 <script>
 import {login} from '@/api/user';
-
+import {setObjArr} from '@/utils/auth'
 export default {
   name: 'Login',
   data() {
@@ -49,11 +49,10 @@ export default {
           return login(formData).then(res => {
             this.logging = false;
             // 判断是否登录成功
-            if (res.code === 0) {
-              this.loading = false;
-              this.$router.push('/sourceCode/overview');
-              //window.location.href = "/imonitor/dashboard/home";
-            }
+            this.loading = false;
+            setObjArr("userName",res.data.username);
+            this.$router.push('/sourceCode/overview');
+            //window.location.href = "/imonitor/dashboard/home";
           });
         }
       });

@@ -41,8 +41,9 @@
               <a-tree
                 showLine
                 checkable
-                :autoExpandParent=false
+                :defaultExpandedKeys="deptCheckedKeys"
                 @check="this.onCheck"
+                :defaultCheckedKeys="deptCheckedKeys"
                 :treeData="departmentTree"
               />
             </a-form-item>
@@ -67,6 +68,10 @@ export default {
       required: false
     },
     departmentTree: {
+      type: Array,
+      required: true
+    },
+    deptCheckedKeys: {
       type: Array,
       required: true
     },
@@ -100,7 +105,7 @@ export default {
           formData.append("roleName",values.roleName);
           formData.append("roleKey",values.roleKey);
           formData.append("dataScope",values.dataScope);
-          formData.append("deptIds",this.deptIds);
+          formData.append("deptIds",this.deptIds || "");
           authDataScope(formData).then(res =>{
             if(res.code === 0){
               this.$message.success(res.msg);
@@ -122,7 +127,7 @@ export default {
       this.form.resetFields();
     },
     handleChange(value){
-      this.dataRecord.dataScope = value === "1"?"1":"2";
+      this.dataRecord.dataScope = value ;
     }
   }
 }

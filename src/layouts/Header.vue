@@ -12,7 +12,7 @@
         </a-menu>
         <div>
           <a-avatar style="backgroundColor:#108ee9" size="small" icon="user"/>&nbsp;
-          <span style="color:#000000;font-size: 15px">admin</span>
+          <span style="color:#000000;font-size: 15px">{{username}}</span>
         </div>
       </a-dropdown>
     </div>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import {removeObjArr} from '@/utils/auth'
+import {getObjArr,removeObjArr} from '@/utils/auth'
 import {logout} from '@/api/user'
 //import fullScreen from "@/components/fullScreen/index"
 
@@ -28,6 +28,7 @@ export default {
   name: 'Header',
   data() {
     return {
+      username:getObjArr("userName")
       //fullscreen: false
     };
   },
