@@ -39,8 +39,8 @@ export default {
     LogOut() {
       logout().then(() => {
         removeObjArr();
-        // window.location.href = "/login";
-        this.$router.push({path: '/login'});
+        window.location.href = "/login";
+        //this.$router.push({path: '/login'});
       });
     }
   }

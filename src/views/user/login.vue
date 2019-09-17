@@ -51,8 +51,8 @@ export default {
             // 判断是否登录成功
             this.loading = false;
             setObjArr("userName",res.data.username);
-            this.$router.push('/sourceCode/overview');
-            //window.location.href = "/imonitor/dashboard/home";
+            //this.$router.push('/sourceCode/overview');
+            window.location.href = "/sourceCode/overview";
           });
         }
       });

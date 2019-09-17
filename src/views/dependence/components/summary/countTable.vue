@@ -7,6 +7,7 @@
                    :dataSource="tableData"
                    :pagination="pagination"
                    :loading="loading"
+                   :scroll="{ x: 1300 }"
                    :rowKey="record => record.fileName">
 
             <span slot="cpe" slot-scope="text, record">
@@ -27,7 +28,7 @@
 </template>
 
 <script>
-import {getColumn} from "@/utils/myUtils";
+import {getColumn,getFixedColumn} from "@/utils/myUtils";
 import config from "@/utils/config";
 export default {
   name: "countTable",
@@ -49,7 +50,7 @@ export default {
   computed: {
     columns() {
       const columns = [
-        getColumn("Dependency", "fileName", (a, b) => a.fileName.localeCompare(b.fileName)),
+        getFixedColumn("Dependency", "fileName", "left",(a, b) => a.fileName.localeCompare(b.fileName)),
         getColumn("CPE", "cpe", (a, b) => a.cpe.localeCompare(b.cpe)),
         getColumn("GAV", "gav", (a, b) => a.gav.localeCompare(b.gav)),
         getColumn("Highest Severity", "highestSeverity", (a, b) => a.highestSeverity.localeCompare(b.highestSeverity)),

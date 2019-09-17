@@ -37,7 +37,7 @@
               <a-icon type="exclamation-circle" /> 特殊情况下，设置为“自定数据权限”
             </a-form-item>
 
-            <a-form-item v-if="dataRecord" v-show="dataRecord.dataScope ==='2'" label="菜单权限" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
+            <a-form-item v-if="dataRecord" v-show="dataRecord.dataScope ==='2'" label="数据权限" :label-col="{ span: 4 }" :wrapper-col="{ span: 18 }">
               <a-tree
                 showLine
                 checkable

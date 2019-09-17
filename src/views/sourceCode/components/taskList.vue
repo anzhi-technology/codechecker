@@ -25,7 +25,7 @@
                   </span>
                   <!--操作列-->
                   <span slot="action" slot-scope="text, record">
-                    <a-popconfirm v-if="runningData.length" title="确定删除?" @confirm="() => deleteTask(record.id)" okText="确定" cancelText="取消">
+                    <a-popconfirm v-if="runningData.length" title="确定终止任务?" @confirm="() => deleteRunningTask(record.hcode)" okText="确定" cancelText="取消">
                       <a-button size="small" style="background-color: #DC6068; color: #fff" icon="delete" title="删除">
                       </a-button>
                     </a-popconfirm>
@@ -52,7 +52,7 @@
 
                   <!--操作列-->
                   <span slot="action" slot-scope="text, record">
-                    <a-popconfirm v-if="allData.length" title="确定删除?" @confirm="() => deleteTask(record.id)" okText="确定" cancelText="取消">
+                    <a-popconfirm v-if="allData.length" title="确定删除?" @confirm="() => deleteTaskBySid(record.id)" okText="确定" cancelText="取消">
                       <a-button size="small" style="background-color: #DC6068; color: #fff" icon="delete" title="删除">
                       </a-button>
                     </a-popconfirm>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import {getTasksList} from '@/api/sourceCode/list';
+import {getTasksList,deleteTask,cancelTask} from '@/api/sourceCode/list';
 import {getColumn, timeToDateString} from "@/utils/myUtils";
 import config from '@/utils/config'
 //import initDict from "@/mixins/initDict";
@@ -134,11 +134,6 @@ export default {
       })
     });
   },
-  /* created() {
-       this.$nextTick(() => {
-         this.getData();
-       });
-     },*/
   methods: {
     changeDataVisible(visible) {
       this.$emit("changeDataVisible", visible)
@@ -164,9 +159,25 @@ export default {
     handleCancel() {
       this.changeDataVisible(false);
     },
-    deleteTask(id) {
-
+    deleteRunningTask(projectId){
+      cancelTask(projectId).then(()=>{
+        this.$message.success('操作成功！');
+        this.getData();
+      });
+    },
+    deleteTaskBySid(sid) {
+      deleteTask(sid).then(res=>{
+        if (res.data === 1) {
+          this.$message.success('删除成功！');
+          this.getData();
+        } else {
+          this.$message.error(res.msg);
+        }
+      })
     }
+  },
+  destroyed() {
+    clearInterval(this.intervalFlag);
   }
 }
 </script>

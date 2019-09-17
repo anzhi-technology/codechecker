@@ -45,7 +45,16 @@ export function deleteProject(id,data = {}) {
   return del(`${config.adminPrefix}/project/${id}`, data);
 }
 
-/*编辑项目*/
+/*扫描项目*/
 export function scanProject(data = {}) {
-  return post(`${config.adminPrefix}/project/projectCheck`, data);
+  return post(`${config.adminPrefix}/project/scan`, data);
+}
+
+/*删除任务*/
+export function deleteTask(sid,data = {}) {
+  return del(`${config.adminPrefix}/project/task/${sid}`, data);
+}
+/*终止任务*/
+export function cancelTask(projectId,data = {}) {
+  return post(`${config.huntLeakPrefix}/scanStatus/cancel?projectId=${projectId}`, data);
 }

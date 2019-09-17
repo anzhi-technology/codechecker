@@ -88,7 +88,7 @@ export default {
       //缺陷统计
       flag: false,
       timeData: [],
-      startValue: '',
+      startValue: "",
       singleCriticalData: [],
       singleHighData: [],
       singleMediumData: [],
@@ -104,7 +104,7 @@ export default {
   },
   watch: {
     //监听相同路由下参数变化的时候，从而实现异步刷新
-    '$route'(to, from) {
+    '$route'() {
       //做一些路由变化的响应
       //重新获取数据
       this.getVulnerabilityData();
@@ -122,40 +122,42 @@ export default {
     getVulnerabilityData() {
       let projectId = this.$route.params.parameter;
       getVulnerabilityCount(projectId).then(res => {
-        let typeMap = _.groupBy(res.content, item => item.type); //按类型处理数据
-        let typeNumber = _.keys(typeMap).length;  //缺陷种类的数量
-        let countData = [];
-        for (let item_type in typeMap) {
-          let fileMap = _.groupBy(typeMap[item_type], item => item.sourceFilePath);
-          let fileNumber = _.keys(fileMap).length;
-          //计算缺陷行数
-          let lineCountArray = [];
-          typeMap[item_type].forEach(item => {
-            lineCountArray.push((item.lineEnd - item.lineStart + 1)); //将行数添加到数组中
-          });
-          let totalLines = _.reduce(lineCountArray, (memo, num) => memo + num, 0); //将数组的数据相加
-          let sortByInstanceSeverity = _.sortBy(typeMap[item_type], 'instanceSeverity');//按等级排序 从小到大
-          sortByInstanceSeverity.reverse(); //反序数组
-          countData.push({
-            name: item_type,
-            number: lineCountArray.length,
-            files: fileNumber,
-            totalLines,
-            highestLevel: sortByInstanceSeverity[0].instanceSeverity
-          });
+        if(res.content){
+          let typeMap = _.groupBy(res.content, item => item.type); //按类型处理数据
+          let typeNumber = _.keys(typeMap).length;  //缺陷种类的数量
+          let countData = [];
+          for (let item_type in typeMap) {
+            let fileMap = _.groupBy(typeMap[item_type], item => item.sourceFilePath);
+            let fileNumber = _.keys(fileMap).length;
+            //计算缺陷行数
+            let lineCountArray = [];
+            typeMap[item_type].forEach(item => {
+              lineCountArray.push((item.lineEnd - item.lineStart + 1)); //将行数添加到数组中
+            });
+            let totalLines = _.reduce(lineCountArray, (memo, num) => memo + num, 0); //将数组的数据相加
+            let sortByInstanceSeverity = _.sortBy(typeMap[item_type], 'instanceSeverity');//按等级排序 从小到大
+            sortByInstanceSeverity.reverse(); //反序数组
+            countData.push({
+              name: item_type,
+              number: lineCountArray.length,
+              files: fileNumber,
+              totalLines,
+              highestLevel: sortByInstanceSeverity[0].instanceSeverity
+            });
+          }
+          this.vulnerabilityTableData = countData;
+          let lineArray = _.pluck(countData, 'totalLines');
+          let lines = _.reduce(lineArray, (memo, num) => memo + num, 0); //将行数相加
+          let filesCount = _.groupBy(res.content, item => item.sourceFilePath);
+          let files = _.keys(filesCount).length;
+          this.vulnerabilityData = {typeNumber, total: res.content.length, lines, files};
         }
-        this.vulnerabilityTableData = countData;
-        let lineArray = _.pluck(countData, 'totalLines');
-        let lines = _.reduce(lineArray, (memo, num) => memo + num, 0); //将行数相加
-        let filesCount = _.groupBy(res.content, item => item.sourceFilePath);
-        let files = _.keys(filesCount).length;
-        this.vulnerabilityData = {typeNumber, total: res.content.length, lines, files};
       })
     },
     //获取单个扫描数据，渲染echart
     getSingleProjectData() {
       let timeData = [];
-      let startValue = [];
+      let startValue = '';
       let singleCriticalData = [];
       let singleHighData = [];
       let singleMediumData = [];

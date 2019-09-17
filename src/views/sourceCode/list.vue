@@ -73,17 +73,30 @@
                     <a-popconfirm v-if="dataSource.length" @confirm="() => scan(record)" okText="确定" cancelText="取消">
                       <template slot="title">
                         <p>确定扫描?</p>
-                        <a-checkbox @change="dependenceCheck">依赖检测</a-checkbox>
+                        <!--<a-checkbox @change="dependenceCheck">缺陷检测</a-checkbox>-->
+                        <!--<a-checkbox @change="dependenceCheck">依赖检测</a-checkbox>-->
+                        <a-checkbox-group v-model="checkMode" @change="dependenceCheck">
+                          <a-checkbox value="0">缺陷检测</a-checkbox>
+                          <a-checkbox value="1">依赖检测</a-checkbox>
+                        </a-checkbox-group>
                       </template>
                       <a-button size="small" style="background-color: #2db7f5; color: #fff" title="扫描">
                         <span class="yyIcon iconscan"></span>
                       </a-button>
                     </a-popconfirm>&nbsp;
                     <!--统计-->
-                    <router-link :to="{ path: '/sourceCode/summary/' + record.hcode }">
-                      <a-button size="small" style="background-color: #EDAE67; color: #fff" title="统计">
+                    <a-dropdown>
+                      <a-menu slot="overlay" @click="handleReportClick">
+                        <a-menu-item key="1" >
+                          <router-link :to="{ path: '/sourceCode/summary/' + record.hcode }">缺陷报告</router-link>
+                        </a-menu-item>
+                        <a-menu-item key="2">
+                          <router-link :to="{ path: '/dependence/summary/' + record.hcode }">依赖报告</router-link>
+                        </a-menu-item>
+                      </a-menu>
+                      <a-button size="small" style="background-color: #EDAE67; color: #fff" >
                         <span class="yyIcon iconchart-area"></span></a-button>
-                    </router-link>&nbsp;
+                    </a-dropdown>&nbsp;
                     <!--缺陷详情-->
                     <router-link :to="{ path: '/sourceCode/analyzeCode/' + record.hcode }">
                       <a-button size="small" style="background-color: #f50; color: #fff" title="缺陷详情">
@@ -108,6 +121,7 @@
 
 <script>
 import {getProjectsList, editProject, getSingleProject, deleteProject, scanProject} from '@/api/sourceCode/list';
+import {scanDependence} from "@/api/dependence/dependence";
 import TopTools from "@/components/Table/TopTools";
 import taskList from "./components/taskList"
 import {getWidthColumn, filterData, timeToDateString, isNull} from "@/utils/myUtils";
@@ -131,7 +145,7 @@ export default {
       searchCondition: "",
       isRefresh: false,
       intervalFlag: '',
-      isDependenceCheck: "0"
+      checkMode: ['0'],
     };
   },
   computed: {
@@ -240,14 +254,28 @@ export default {
     },
     /*扫描项目*/
     scan(record) {
-      let data = {hcode: record.hcode, dependencyScan: this.isDependenceCheck};
-      scanProject(data).then(res => {
-
-      })
+      let checkMode = this.checkMode;
+      if(checkMode.length === 0){
+        this.$message.error("请至少选择一种检测方式");
+      }else{
+        if(checkMode.includes("0")){
+          let dependencyScan = checkMode.includes("1")?  "1" : "0";
+          let formData = new FormData();
+          formData.append("hcode", record.hcode);
+          formData.append("dependencyScan", dependencyScan);
+          scanProject(formData);
+        }else {
+          scanDependence(record.hcode);
+        }
+      }
     },
     /*判断是否有依赖检测*/
-    dependenceCheck(e) {
-      this.isDependenceCheck = e.target.checked ? "1" : "0";
+    dependenceCheck(checkedValues) {
+      this.checkMode = checkedValues;
+    },
+    //report
+    handleReportClick(){
+
     }
   },
   destroyed() {
