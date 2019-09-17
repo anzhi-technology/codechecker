@@ -32,8 +32,9 @@
 
                   <!--克隆状态-->
                   <span slot="cloned" slot-scope="text">
-                    <a-tag color="#2db7f5" v-if="text === 'cloning'">正在克隆</a-tag>
-                    <a-tag color="#108ee9" v-if="text === 'cloned'">成功</a-tag>
+                    <a-tag color="#2db7f5" v-if="text === '0'">正在克隆</a-tag>
+                    <a-tag color="#108ee9" v-if="text === '1'">克隆成功</a-tag>
+                    <a-tag color="#f50" v-if="text === '2'">克隆失败</a-tag>
                   </span>
                   <!--定时检测-->
                   <span slot="schedule" slot-scope="text, record">
