@@ -32,7 +32,7 @@
 
                   <!--克隆状态-->
                   <span slot="cloned" slot-scope="text">
-                    <a-tag color="#2db7f5" v-if="text === '0'">正在克隆</a-tag>
+                    <a-tag color="#87d068" v-if="text === '0'">正在克隆</a-tag>
                     <a-tag color="#108ee9" v-if="text === '1'">克隆成功</a-tag>
                     <a-tag color="#f50" v-if="text === '2'">克隆失败</a-tag>
                   </span>
@@ -88,14 +88,14 @@
                     <!--统计-->
                     <a-dropdown>
                       <a-menu slot="overlay" @click="handleReportClick">
-                        <a-menu-item key="1" >
+                        <a-menu-item key="1">
                           <router-link :to="{ path: '/sourceCode/summary/' + record.hcode }">缺陷报告</router-link>
                         </a-menu-item>
                         <a-menu-item key="2">
                           <router-link :to="{ path: '/dependence/summary/' + record.hcode }">依赖报告</router-link>
                         </a-menu-item>
                       </a-menu>
-                      <a-button size="small" style="background-color: #EDAE67; color: #fff" >
+                      <a-button size="small" style="background-color: #EDAE67; color: #fff">
                         <span class="yyIcon iconchart-area"></span></a-button>
                     </a-dropdown>&nbsp;
                     <!--缺陷详情-->
@@ -256,16 +256,17 @@ export default {
     /*扫描项目*/
     scan(record) {
       let checkMode = this.checkMode;
-      if(checkMode.length === 0){
+      if (checkMode.length === 0) {
         this.$message.error("请至少选择一种检测方式");
-      }else{
-        if(checkMode.includes("0")){
-          let dependencyScan = checkMode.includes("1")?  "1" : "0";
+      } else {
+        if (checkMode.includes("0")) {
+          let dependencyScan = checkMode.includes("1") ? "1" : "0";
           let formData = new FormData();
           formData.append("hcode", record.hcode);
           formData.append("dependencyScan", dependencyScan);
           scanProject(formData);
-        }else {
+
+        } else {
           scanDependence(record.hcode);
         }
       }
@@ -275,7 +276,7 @@ export default {
       this.checkMode = checkedValues;
     },
     //report
-    handleReportClick(){
+    handleReportClick() {
 
     }
   },

@@ -32,7 +32,7 @@ export function checkClassPath(data = {}) {
 
 /*添加项目*/
 export function addProject(data = {}) {
-  return post(`${config.adminPrefix}/project/new`, data);
+  return post(`${config.adminPrefix}/project/add`, data);
 }
 
 /*编辑项目*/
